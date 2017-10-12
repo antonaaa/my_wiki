@@ -1,0 +1,120 @@
+%title Golden Section Method
+= Golden Section Method =
+
+== 黄金分割法的定义 ==
+    黄金分割法只要求函数是单谷函数，对于函数是否连续并不做要求。也即该函数只要能返回给定点的函数值即可。
+	
+对于单谷函数求极值，只要简单地在区间$[a,b]$中任取两点$\alpha_1$，$\alpha_2$，并求两点处的函数值$f(\alpha_1)$，$f(\alpha_2)$，并比较两点出的函数值，那么就能对搜索区间进行压缩。
+step1. 如果$f(\alpha_1) < f(\alpha_2)$，那么说明极小点必定位于区间$[a, \alpha_2]$内
+	
+[[local:./resources/三分法1.png|{{local:./resources/三分法1.png|函数图像}}]]
+
+	
+step2. 如果$f(\alpha_1) > f(\alpha_2)$，那么说明极小点必定位于区间$[\alpha_1, b]$内
+	
+[[local:./resources/三分法2.png|{{local:./resources/三分法2.png|函数图像}}]]
+
+step3. 如果$f(\alpha_1) = f(\alpha_2)$，那么说明极小点必定位于区间$[\alpha_1, \alpha_2]$内，这种情况可以并入上面两种情况中的一种。
+
+[[local:./resources/三分法3.png|{{local:./resources/三分法3.png|函数图像}}]]
+
+step4. 在上述所说的情况中进行迭代，很快就能把搜索区间压缩到非常小。
+
+----
+* 黄金分割法在上面方法的基础上进行改进，上面的搜索方法每次迭代都要计算两次函数值。
+
+* 黄金分割法通过合理设置两个插入点的位置，使得除了第一次迭代需要计算两次函数值外，此后的每次迭代仅需计算几次函数值。
+
+* 所以黄金分割法可以在`计算函数值次数同样多`的情况下，将区间缩小的最快。
+
+
+    黄金分割法的思想如下：
+1. 希望插入点$\alpha_1$和$\alpha_2$在区间$[a,b]$中是对称的，这样无论删除哪一段，总是保留长度为$\lambda$的一段。
+2. 删掉一段后，例如删掉区间$[\alpha_2, b]$后，在保留下来的区间中插入点$\alpha_3$后，希望$\alpha_3$,$\alpha_1$在区间$[a, \alpha2]$中的位置和$\alpha_1$,$\alpha_2$在区间$[a,b]$中的位置具有相同的比例，这样能够保证每次的区间长度都是原先的$\lambda$倍。
+	- 两幅图中，由于$\vec{a\alpha_1}=\vec{a\alpha_1}$，所以有$\lambda^2=(1-\lambda)$，从而求解得$\lambda \approx 0.618$。
+[[local:./resources/黄金分割法.png|{{local:./resources/黄金分割法.png|函数图像}}]]
+
+
+== 收敛速度证明 ==
+可证明黄金分割法是三分法中最快的。
+* 三分法每次迭代所缩减的区间比率不超过$0.5$（这个拿笔在纸上画画，直观感受下就好了）。
+* 而黄金分割法每次迭代所缩减的区间比率为$0.382$，但是黄金分割法每次迭代只需要计算一次函数值。
+* 黄金分割法两次迭代所缩减的区间比率为$0.382 + 0.618 * 0.382 = 0.382 * (1 + 0.618) \approx 0.618$。
+* 所以在相同的函数值计算次数下，将区间缩小得最快。
+
+
+假设当$b - a < \epsilon$时停止迭代，那么需要次数k为
+$$
+k \ge  \frac{\ln \frac{\epsilon}{(b-a)}}{ln 0.618}
+$$
+----
+证明过程如下
+$$
+(b-a) * 0.618^k \le \epsilon \\
+\Rightarrow \ln(b-a) + kln 0.618 \le ln \epsilon \\
+\Rightarrow \ln(b-a) - \ln \epsilon \le -k \ln0.618 \\
+\Rightarrow \ln \frac{b-a}{\epsilon} \le -k \ln0.618 \\
+\Rightarrow \ln \frac{\epsilon}{b-a} \ge k \ln0.618 \\
+\Rightarrow \frac{\ln \frac{\epsilon}{b-a}}{\ln 0.618} \le k  \ \ \ \ as \ln 0.618 \le 0
+$$
+
+
+    写完这个，然后写了抛物线插值法之后，突然间发现， 三分法也可以重新利用原先的一个点，只是每次区间缩减的比率不确定了。 那么如何对比利用原先点的三分法和黄金分割法呢？？？
+
+== 算法流程 ==
+
+[[local:./resources/黄金分割法流程图.png|{{local:./resources/黄金分割法流程图.png|函数图像}}]]
+== 算法代码 ==
+{{{cpp
+int dcmp(double x, double y, double eps)
+{
+	if (fabs(x - y) < eps)
+		return -1;
+	else
+		return 1;
+}
+double golden_section(double (*f)(double), double l, double r, double eps)
+{
+	double golden_num = (sqrt(5) - 1) / 2.0;
+	double t1 = l + (1 - golden_num) * (r - l);
+	double t2 = l + (r - t1);
+	double val1 = f(t1);
+	double val2 = f(t2);
+	int i = 0;
+	while(dcmp(l, r, eps) == 1)
+	{
+		if(val1 < val2)
+		{
+			//[l, t2]
+			r = t2;
+			t2 = t1;
+			val2 = val1;
+			t1 = l + (r - t2);
+			val1 = f(t1);
+		}
+		else
+		{
+			//[t1, r]
+			l = t1;
+			t1 = t2;
+			val1 = val2;
+			t2 = l + (r - t1);
+			val2 = f(t2);
+		}
+		i+=1;
+	}
+	return (l + r) / 2;
+}
+}}}
+
+== 实际使用需要注意的地方 ==
+当刚开始迭代时，离极小点还比较远，所以精度搜索的是意义不大的。
+
+可以适当调整$\epsilon$的值，使其变为不精确搜索
+
+即刚开始迭代时，让$\epsilon$的值不那么小，那么迭代时，就不会将区间压缩到很小时才跳出循环，从而减少迭代次数，变为不精确搜索。
+
+当迭代次数较多之后，让$\epsilon$的值适当减少，从而变为精确搜索。
+
+=== 参考 ===
+1. [[https://wenku.baidu.com/view/071f8a807c1cfad6185fa768.html|第3章一维搜索方法]]

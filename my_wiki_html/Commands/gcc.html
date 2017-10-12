@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>gcc</title>
+    <link rel="Stylesheet" type="text/css" href="../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../about.html">About</a>
+    <a href="../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+<div id="gcc"><h1 id="gcc">gcc</h1></div>
+<div id="gcc-预处理"><h2 id="预处理">预处理</h2></div>
+
+<p>
+预处理工程是对程序中的伪指令（以#开头的指令）进行处理。
+</p>
+<ol>
+<li>
+宏定义指令
+
+<ul>
+<li>
+如<code>#define</code>、<code>#undef</code>
+
+</ul>
+<li>
+头文件包含指令
+
+<ul>
+<li>
+<code>#include</code>
+
+</ul>
+<li>
+条件编译指令
+
+<ul>
+<li>
+如<code>#ifdef</code>、<code>#ifndef</code>、<code>#else</code>、<code>#elif</code>、<code>#endif</code>
+
+</ul>
+</ol>
+<p>
+预处理阶段所完成的工作基本是对源程序进行“替换”工作，生成一个没有宏定义指令、没有头文件包含指令、没有条件编译指令的输出文件。
+</p>
+<ol>
+<li>
+例如`#define n 10;’；经过预处理后，所有的n都会被10替换。
+
+<li>
+如果a.c中有头文件<code>#include&lt;string.h&gt;</code>，那么会将<code>string.h</code>中的所有内容到a.c中；类似的，对于<code>string.h</code>文件，如果里面也有头文件，那么也会做相应处理。
+
+<li>
+预编译器根据条件编译指令，将不必要的代码过滤掉，这样就不会出现重复定义的问题。
+
+</ol>
+<p>
+一般预处理后的文件名的后缀是<code>.i</code>。
+</p>
+<pre shell>
+gcc -E a.c -o a.i		指令-E表示仅仅执行预处理器(preprocessor)
+or:
+gcc -E a.c &gt; a.i
+</pre>
+
+
+<div id="gcc-编译"><h2 id="编译">编译</h2></div>
+<pre shell>
+gcc -S a.i			指令-S表示将预处理后的文件编译成汇编代码a.s
+gcc -c a.s			指令-c表示将程序编译成机器码a.o
+or:
+gcc -c a.c			指令-c也可以直接将源程序a.c编译成机器码a.o
+</pre>
+<div id="gcc-静态链接和动态链接"><h2 id="静态链接和动态链接">静态链接和动态链接</h2></div>
+<pre shell>
+gcc a.o -o a			将机器码和其他库的机器码链接在一起，形成可执行文件
+</pre>
+
+<p>
+链接分为静态链接和动态链接
+</p>
+<ul>
+<li>
+静态链接时，静态库会被复制到可执行文件中，所以生成的可执行文件就不受库的影响了，即使库被删除了，程序依然能够正常运行。
+
+<li>
+动态链接时，动态库不会被复制到可执行文件中，（不知道动态链接的过程中做了什么），但在程序运行的时候，会去相应的位置找到该动态库，并将动态库进行载入。所以即使生成了可执行文件，库必须保留在系统上，以便程序的正常运行。
+
+</ul>
+<hr />
+<ol>
+<li>
+扩展:<a href="..&#47;C_CPP&#47;.o、.a、.so文件的区别.html">.o、.a、.so文件的区别</a>
+
+<li>
+参考:<a href="http:&#47;&#47;blog.csdn.net&#47;orzlzro&#47;article&#47;details&#47;6460058">gcc编译使用动态链接库和静态链接库</a>
+
+</ol>
+<hr />
+
+<div id="gcc-静态链接和动态链接-生成与使用静态库"><h3 id="生成与使用静态库">生成与使用静态库</h3></div>
+<p>
+生成静态库
+</p>
+<pre cpp>
+//a.c
+#include &lt;stdio.h&gt;
+void hello()
+{
+	printf("This is a.c\n");
+}
+</pre>
+<pre shell>
+gcc -c a.c
+ar -r liba.a a.o
+</pre>
+<p>
+使用静态库<code>liba.a</code>
+</p>
+<pre cpp>
+//test.c
+void hello();
+int main()
+{
+	hello();
+	return 0;
+}
+</pre>
+<pre shell>
+gcc -static test.c -o test -l a -L ./
+</pre>
+<p>
+由于是静态链接，所以即使删除了<code>liba.a</code>静态库，程序<code>test</code>也能够正常运行，因为<code>test</code>的机器码中已经包含了程序执行所需要的所有信息。
+</p>
+
+<div id="gcc-静态链接和动态链接-生成与使用动态库"><h3 id="生成与使用动态库">生成与使用动态库</h3></div>
+<p>
+生成动态库
+</p>
+<pre cpp>
+//a.c
+#include &lt;stdio.h&gt;
+void hello()
+{
+	printf("This is a.c\n");
+}
+</pre>
+<pre shell>
+gcc -shared a.c -o liba.so
+</pre>
+<p>
+使用动态库<code>liba.so</code>
+</p>
+<pre cpp>
+//test.c
+void hello();
+int main()
+{
+	hello();
+	return 0;
+}
+</pre>
+<pre shell>
+gcc test.c -o test -l a -L ./
+</pre>
+
+<p>
+由于使用了动态链接，所以如果删除了动态库<code>liba.so</code>，那么程序<code>test</code>将无法正常运行。
+</p>
+
+
+<hr />
+<p>
+当使用标准库时，比如<code>&lt;stdio.h&gt;</code>、<code>&lt;string.h&gt;</code>文件时，编译源程序的时候，是不需要进行库的链接的，这是因为编译器会自动帮我们进行链接。
+但是如果使用第三方或者是自己写的库时，就需要指定库的名字和库所在的位置。
+<hr />
+</p>
+<pre>
+gcc -fPIC -shared great_module.c -o great_module.so -I /usr/include/python2.7/ -l python2.7
+</pre>
+
+
+	
+<div id="gcc-参数总结"><h2 id="参数总结">参数总结</h2></div>
+<ul>
+<li>
+<code>-E</code>  预处理
+
+<li>
+<code>-S</code> 汇编
+
+<li>
+<code>-c</code> 编译
+
+<li>
+<code>-o</code> 输出到文件，后边接要输出的文件名
+
+<li>
+<code> -std=c++11</code>  使用c++11版本
+
+<li>
+<code>-M</code> 生成文件依赖信息， 包括库文件
+
+<li>
+<code>-MM</code> 生成文件依赖信息， 不包括库文件
+
+<li>
+<code>-fPIC</code>
+
+<ul>
+<li>
+<a href="http:&#47;&#47;blog.csdn.net&#47;derkampf&#47;article&#47;details&#47;69660050">http://blog.csdn.net/derkampf/article/details/69660050</a>
+
+</ul>
+<li>
+<code>-shared</code>
+
+<ul>
+<li>
+生成动态链接（共享）库
+
+</ul>
+<li>
+<code>-static</code>
+
+<ul>
+<li>
+指定链接阶段使用静态链接
+
+</ul>
+<li>
+<code>-I</code>
+
+<ul>
+<li>
+当cpp文件中包含的头文件不在/usr/include, /usr/local/include, 以及当前目录下时,用-I指定头文件的目录，这样gcc就会去相应的目录去寻找头文件
+
+</ul>
+</ul>
+
+<ul>
+<li>
+<code>-l</code>
+
+<ul>
+<li>
+当cpp文件中使用到其他的动态链接库或者静态链接库时，那么使用-l指定链接库的名字;-l python2.7 表示动态链接库的名字是libpython2.7.so,(在mac上是libpython2.7.dylib)如果加上-static选项， 那么表示寻找静态链接库，也就是libpython2.7.a
+
+</ul>
+</ul>
+
+<ul>
+<li>
+<code>-L</code>
+
+<ul>
+<li>
+动态链接库和静态链接库都是库文件,默认情况下是搜索/usr/lib和/usr/local/lib;如果不在这两个目录下，那么需要自己指定库文件的目录
+
+</ul>
+</ul>
+<hr />
+<div id="gcc-参数总结-参考文献"><h3 id="参考文献">参考文献</h3></div>
+<ol>
+<li>
+<a href="http:&#47;&#47;www.cnblogs.com&#47;zhangsir6&#47;articles&#47;2956798.html">gcc常用参数详解</a>
+
+<li>
+<a href="http:&#47;&#47;blog.csdn.net&#47;u013467442&#47;article&#47;details&#47;44560443">gcc常用命令</a>
+
+<li>
+<a href="https:&#47;&#47;wenku.baidu.com&#47;view&#47;f09182bbd4d8d15abe234ecb.html">g++参数和makefile</a>
+
+</ol>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

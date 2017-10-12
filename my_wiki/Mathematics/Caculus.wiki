@@ -1,0 +1,4 @@
+%title Caculus
+= Caculus =
+
+* [[https://www.zhihu.com/question/40181086|如何理解偏导与凸函数的Hessian矩阵是半正定的]]

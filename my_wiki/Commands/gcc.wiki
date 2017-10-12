@@ -1,0 +1,138 @@
+= gcc =
+== 预处理 ==
+
+预处理工程是对程序中的伪指令（以#开头的指令）进行处理。
+1. 宏定义指令
+	- 如`#define`、`#undef`
+2. 头文件包含指令
+	- `#include`
+3. 条件编译指令
+	- 如`#ifdef`、`#ifndef`、`#else`、`#elif`、`#endif`
+预处理阶段所完成的工作基本是对源程序进行“替换”工作，生成一个没有宏定义指令、没有头文件包含指令、没有条件编译指令的输出文件。
+1. 例如`#define n 10;’；经过预处理后，所有的n都会被10替换。
+2. 如果a.c中有头文件`#include<string.h>`，那么会将`string.h`中的所有内容到a.c中；类似的，对于`string.h`文件，如果里面也有头文件，那么也会做相应处理。
+3. 预编译器根据条件编译指令，将不必要的代码过滤掉，这样就不会出现重复定义的问题。
+一般预处理后的文件名的后缀是`.i`。
+{{{shell
+gcc -E a.c -o a.i		指令-E表示仅仅执行预处理器(preprocessor)
+or:
+gcc -E a.c > a.i
+}}}
+
+
+== 编译 ==
+{{{shell
+gcc -S a.i			指令-S表示将预处理后的文件编译成汇编代码a.s
+gcc -c a.s			指令-c表示将程序编译成机器码a.o
+or:
+gcc -c a.c			指令-c也可以直接将源程序a.c编译成机器码a.o
+}}}
+== 静态链接和动态链接 ==
+{{{shell
+gcc a.o -o a			将机器码和其他库的机器码链接在一起，形成可执行文件
+}}}
+
+链接分为静态链接和动态链接
+* 静态链接时，静态库会被复制到可执行文件中，所以生成的可执行文件就不受库的影响了，即使库被删除了，程序依然能够正常运行。
+* 动态链接时，动态库不会被复制到可执行文件中，（不知道动态链接的过程中做了什么），但在程序运行的时候，会去相应的位置找到该动态库，并将动态库进行载入。所以即使生成了可执行文件，库必须保留在系统上，以便程序的正常运行。
+----
+1) 扩展:[[../C_CPP/.o、.a、.so文件的区别|.o、.a、.so文件的区别]]
+2) 参考:[[http://blog.csdn.net/orzlzro/article/details/6460058|gcc编译使用动态链接库和静态链接库]]
+----
+
+=== 生成与使用静态库 ===
+生成静态库
+{{{cpp
+//a.c
+#include <stdio.h>
+void hello()
+{
+	printf("This is a.c\n");
+}
+}}}
+{{{shell
+gcc -c a.c
+ar -r liba.a a.o
+}}}
+使用静态库`liba.a`
+{{{cpp
+//test.c
+void hello();
+int main()
+{
+	hello();
+	return 0;
+}
+}}}
+{{{shell
+gcc -static test.c -o test -l a -L ./
+}}}
+由于是静态链接，所以即使删除了`liba.a`静态库，程序`test`也能够正常运行，因为`test`的机器码中已经包含了程序执行所需要的所有信息。
+
+=== 生成与使用动态库 ===
+生成动态库
+{{{cpp
+//a.c
+#include <stdio.h>
+void hello()
+{
+	printf("This is a.c\n");
+}
+}}}
+{{{shell
+gcc -shared a.c -o liba.so
+}}}
+使用动态库`liba.so`
+{{{cpp
+//test.c
+void hello();
+int main()
+{
+	hello();
+	return 0;
+}
+}}}
+{{{shell
+gcc test.c -o test -l a -L ./
+}}}
+
+由于使用了动态链接，所以如果删除了动态库`liba.so`，那么程序`test`将无法正常运行。
+
+
+----
+当使用标准库时，比如`<stdio.h>`、`<string.h>`文件时，编译源程序的时候，是不需要进行库的链接的，这是因为编译器会自动帮我们进行链接。
+但是如果使用第三方或者是自己写的库时，就需要指定库的名字和库所在的位置。
+----
+{{{
+gcc -fPIC -shared great_module.c -o great_module.so -I /usr/include/python2.7/ -l python2.7
+}}}
+
+
+	
+== 参数总结 ==	
+* `-E`  预处理
+* `-S` 汇编
+* `-c` 编译
+* `-o` 输出到文件，后边接要输出的文件名
+* ` -std=c++11`  使用c++11版本
+* `-M` 生成文件依赖信息， 包括库文件
+* `-MM` 生成文件依赖信息， 不包括库文件
+* `-fPIC`
+	- http://blog.csdn.net/derkampf/article/details/69660050
+* `-shared`
+	- 生成动态链接（共享）库
+* `-static`
+	- 指定链接阶段使用静态链接
+* `-I`
+	- 当cpp文件中包含的头文件不在/usr/include, /usr/local/include, 以及当前目录下时,用-I指定头文件的目录，这样gcc就会去相应的目录去寻找头文件
+
+* `-l`
+    - 当cpp文件中使用到其他的动态链接库或者静态链接库时，那么使用-l指定链接库的名字;-l python2.7 表示动态链接库的名字是libpython2.7.so,(在mac上是libpython2.7.dylib)如果加上-static选项， 那么表示寻找静态链接库，也就是libpython2.7.a
+
+* `-L`
+	- 动态链接库和静态链接库都是库文件,默认情况下是搜索/usr/lib和/usr/local/lib;如果不在这两个目录下，那么需要自己指定库文件的目录
+----
+=== 参考文献 ===
+1. [[http://www.cnblogs.com/zhangsir6/articles/2956798.html|gcc常用参数详解]]
+2. [[http://blog.csdn.net/u013467442/article/details/44560443|gcc常用命令]]
+3. [[https://wenku.baidu.com/view/f09182bbd4d8d15abe234ecb.html|g++参数和makefile]]

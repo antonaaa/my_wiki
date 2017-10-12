@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>信息熵和Huffman编码</title>
+    <link rel="Stylesheet" type="text/css" href="../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../about.html">About</a>
+    <a href="../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+<div id="信息熵和Huffman编码"><h1 id="信息熵和Huffman编码">信息熵和Huffman编码</h1></div>
+
+
+<ul>
+<li>
+<a href="http:&#47;&#47;mindhacks.cn&#47;2011&#47;07&#47;10&#47;the-importance-of-knowing-why-part3&#47;">知其所以然（三）：为什么算法这么难？</a>
+
+<li>
+<a href="http:&#47;&#47;blog.csdn.net&#47;xiyanxiyan10&#47;article&#47;details&#47;17580599">huffman的证明</a>
+
+</ul>
+
+<ul>
+<li>
+<a href="https:&#47;&#47;www.zhihu.com&#47;question&#47;22178202&#47;answer&#47;205519701">信息熵为什么使用log函数</a>
+
+</ul>
+<blockquote>
+补充一下为什么用log函数。这个涉及两个问题：1.对进制的理解。2.可计算性的理解。对进制的理解。如果是10进制，每一位可以表达10种可能。2位就表达100种。同理，2进制。再说概率，如果一件事情的概率是1/1000，那么隐含的说法就是有1000种情况。为了给1000个情况编码需要几位？用10进制就是3位。2进制就是10位。在计算机中，都是用2进制，所以就用2为底。可计算性的理解设概率p, 那么1/p就是可看成不确定性。如果两种情况的概率分别是 P(A)=p1,P(B)=p2那么P(AB)=p1*p2由于p1,p2都是小于1的数，如果求多个情况一起发生的概率，而且每个概率都很小。p1*p2*p3...= 0.001*0.002*0.0003..........那么，这个数字很快就小到超出计算机的表达范围。同时，对于不确定性，1/p1*1/p2.....很快就大到无法表示。所以，转化成log计算，就解决了这个问题。
+</blockquote>
+
+
+<ul>
+<li>
+<a href="https:&#47;&#47;acm.sjtu.edu.cn&#47;w&#47;images&#47;6&#47;65&#47;%E6%95%B0%E6%8D%AE%E7%BC%96%E7%A0%81%E5%8E%8B%E7%BC%A9%E4%B8%8E%E4%BF%A1%E6%81%AF%E7%86%B5.pdf">数据编码压缩和信息熵</a>
+
+<li>
+<a href="http:&#47;&#47;blog.csdn.net&#47;u013354805&#47;article&#47;details&#47;50112353">数字视频编码概述(熵编码/Huffman编码)</a>
+
+<li>
+<a href="https:&#47;&#47;www.zhihu.com&#47;question&#47;22539777">从信息熵的角度来看，数据压缩是一种怎样的过程？</a>
+
+</ul>
+
+
+<ul>
+<li>
+最短平均编码长度
+
+<li>
+压缩比: 越小越好
+
+<li>
+编码效率 : 等于1就达到了香农所说的最短平均编码长度， 大于1就是有损压缩
+
+</ul>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

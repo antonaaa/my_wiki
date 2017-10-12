@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>what vimwiki can do</title>
+    <link rel="Stylesheet" type="text/css" href="../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../about.html">About</a>
+    <a href="../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+<div id="Intro"><h2 id="Intro">Intro</h2></div>
+<ol>
+<li>
+管理你的笔记和想法
+
+<li>
+管理待办事项
+
+<li>
+写文档
+
+<li>
+写日记
+
+<li>
+将上面的一切转化为HTML
+
+</ol>
+
+<p>
+将鼠标放在一段文字(例如tasks)上面，点击Enter键，那么就会变成一个链接(变成[ [tasks] ]),再次点击Enter就会打开该链接所对应的文件。
+</p>
+
+
+<div id="Prerequisites"><h2 id="Prerequisites">Prerequisites</h2></div>
+<pre>
+set nocompatible
+filetype plugin on
+syntax on
+</pre>
+<p>
+没有这些东西，vimwiki可能工作异常。
+</p>
+
+<div id="Mappings"><h2 id="Mappings">Mappings</h2></div>
+
+<div id="Mappings-Global Mappings"><h3 id="Global Mappings">Global Mappings</h3></div>
+<ul>
+<li>
+<code>&lt;leader&gt;ww</code>
+
+<ul>
+<li>
+<code>&lt;leader&gt;ww</code>或者<code>&lt;Plug&gt;VimwikiIndex</code>将会打开wiki的首页;如果你多次输入<code>&lt;learder&gt;ww</code>,那么你输入了几次,就会进入第几个wiki的首页;<code>g:vimwiki_list</code>的配置中，从上往下分别是第一个、第二个...wiki
+
+<li>
+:nmap &lt;Leader&gt;w &lt;Plug&gt;VimwikiIndex
+
+</ul>
+</ul>
+	
+<ul>
+<li>
+<code>&lt;leader&gt;wt</code>
+
+<ul>
+<li>
+<code>&lt;leader&gt;ww</code>或<code>&lt;Plug&gt;VimwikiTabIndex</code>的功能和<code>&lt;leader&gt;ww</code>类似，只不过是在新Tab(vim buffer)中打开wiki的首页
+
+<li>
+:nmap &lt;Leader&gt;t &lt;Plug&gt;VimwikiTabIndex
+
+</ul>
+</ul>
+
+<ul>
+<li>
+<code>&lt;leader&gt;ws</code>
+
+<ul>
+<li>
+<code>&lt;leader&gt;ws</code>或<code>&lt;Plug&gt;VimwikiUISelect</code>列出并选择可用的wiki
+
+<li>
+:nmap &lt;Leader&gt;wq &lt;Plug&gt;VimwikiUISelect
+
+</ul>
+<li>
+<code>&lt;leader&gt;wi</code>
+
+<li>
+<code>&lt;leader&gt;w&lt;leader&gt;w</code>
+
+<li>
+<code>&lt;leader&gt;w&lt;leader&gt;t</code>
+
+<li>
+<code>&lt;leader&gt;w&lt;leader&gt;y</code>
+
+</ul>
+
+<div id="Mappings-Local Mappings"><h3 id="Local Mappings">Local Mappings</h3></div>
+<ul>
+<li>
+:nmap &lt;Leader&gt;wc &lt;Plug&gt;Vimwiki2HTML
+
+<li>
+:nmap &lt;silent&gt;&lt;buffer&gt; &lt;Leader&gt;wc &lt;Plug&gt;Vimwiki2HTML
+
+</ul>
+
+
+<div id="Wiki Syntax"><h2 id="Wiki Syntax">Wiki Syntax</h2></div>
+
+<div id="Wiki Syntax-Typefaces"><h3 id="Typefaces">Typefaces</h3></div>
+<pre>
+*bold text*			粗体
+_italic text_			斜体
+~~strikeout text~~		删除
+`code (no syntax) text`		代码
+super^script^			上标
+sub,,scriptaa,,			下标
+</pre>
+
+<div id="Wiki Syntax-Links"><h3 id="Links">Links</h3></div>
+
+<div id="Wiki Syntax-Links-Wikilinks"><h4 id="Wikilinks">Wikilinks</h4></div>
+<pre>
+[[This is a link]]
+[[This is a link source|Description of the link]]
+wiki文件没有必要放在你wiki的根目录，你可以将他们放在子目录下
+[[projects/Important Project 1]]
+为了从该文件跳转到index文件，可以使用这样的链接
+[[../index]]		相对路径
+or
+[[/index]]		绝对路径
+</pre>
+
+<div id="Wiki Syntax-Links-InterWiki"><h4 id="InterWiki">InterWiki</h4></div>
+<p>
+如果你有超过一个wiki，那么不同的wiki之间也是可以跳转的
+</p>
+<pre>
+[[wiki1:This is a link]]
+or
+[[wiki1::This is a link|Description of the link]]
+	
+</pre>
+<p>
+wiki后面的数字从0..N-1,标识g:vimwiki_list中的wiki
+</p>
+
+<div id="Wiki Syntax-Links-Anchors"><h4 id="Anchors">Anchors</h4></div>
+<p>
+也可以为links加上锚，那么在跳转到网页时就会跳到对应的锚处
+</p>
+<pre>
+[[This is a link#These are Anchors|Description of the link]]
+相应的，我们要在This is a link 对应的文件中的某处加上锚[[#These are Anchors]]
+</pre>
+
+<div id="Wiki Syntax-Links-Row URLS"><h4 id="Row URLS">Row URLS</h4></div>
+<p>
+也可以直接书写url，那么会在wiki上直接显示该url
+</p>
+<pre>
+https://github.com/vimwiki/vimwiki.git
+mailto:habamax@gmail.com
+ftp://vim.org
+</pre>
+
+<div id="Wiki Syntax-Links-External files"><h4 id="External files">External files</h4></div>
+<p>
+模式file和local允许你链接任意的资源,你可以使用绝对路径或者相对路径
+</p>
+<pre>
+[[file:C:/Users/somebody/d/e/f/music.mp3]]
+[[file:~/a/b/c/music.mp3]]
+[[file:../assets/data.csv|Important Data]]
+[[local:C:/Users/somebody/d/e/f/music.mp3]]
+[[file:/home/user/documents/|Link to a directory]]
+</pre>
+<p>
+这些links将会被系统命令打开， !xdg-open(linux), !open(Max), !start(Windows)
+为了自定义这些行为，可以查看<code>VimwikiLinkHandler</code>
+在Vim下，file和local行为相同;但是转为为HTML时,前者会转为绝对路径，而后者会转为相对路径,如果你要将HTML移动到其它电脑上，那么后者更加有用
+</p>
+	
+<div id="Wiki Syntax-Links-Transclusion (Wiki-Include) Links"><h4 id="Transclusion (Wiki-Include) Links">Transclusion (Wiki-Include) Links</h4></div>
+<p>
+为了在wiki页面上显示图片,那么可以使用<code>{{</code> 和 <code>}}</code>来包含图片的url,那么该url所对应的图片内容就会被包含进HTML中
+</p>
+<ul>
+<li>
+使用本地图片
+
+<ul>
+<li>
+<code>{{file:../../images/vimwiki_logo.png}}</code>
+
+</ul>
+<li>
+使用网络上的图片
+
+<ul>
+<li>
+<code>{{http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png}}</code>
+
+</ul>
+<li>
+为图片添加alt属性
+
+<ul>
+<li>
+<code>{{http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png|Vimwiki}}</code>
+
+<li>
+转换成HTML后: <code>&lt;img src="http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png"alt="Vimwiki"/&gt;</code>
+
+</ul>
+<li>
+指定图片的style
+
+<ul>
+<li>
+<code>{{http://.../vimwiki_logo.png|cool stuff|style="width:150px;height:120px;"}}</code>
+
+<li>
+转换成HTML后 : <code>&lt;img src="http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png" alt="cool stuff" style="width:150px; height:120px"/&gt;</code>
+
+</ul>
+<li>
+指定图片的class
+
+<ul>
+<li>
+<code>{{http://.../vimwiki_logo.png||class="center flow blabla"}}</code>
+
+<li>
+转换成HTML后 : <code>&lt;img src="http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png" alt="" class="center flow blabla"/&gt;</code>
+
+</ul>
+</ul>
+<div id="Wiki Syntax-Links-Thumbnail links"><h4 id="Thumbnail links">Thumbnail links</h4></div>
+<p>
+显示图片有两种，一个是点击图片没有反应；二是点击图片会跳转到相应的链接;
+前者是<code>Transclusion (Wiki-Include) Links</code>,后者是<code>Thumbnail links</code>。
+</p>
+<ul>
+<li>
+构造的方法就是下面这样
+	<code>[[http://someaddr.com/bigpicture.jpg|{{http://someaddr.com/thumbnail.jpg}}]]</code>
+
+<li>
+转为HTML后就变成了
+	<code>&lt;a href="http://someaddr.com/ ... /.jpg"&gt;&lt;img src="http://../thumbnail.jpg /&gt;&lt;/a&gt;</code>
+
+</ul>
+<div id="Wiki Syntax-Links-Markdown links"><h4 id="Markdown links">Markdown links</h4></div>
+
+
+<div id="Wiki Syntax-Headers"><h3 id="Headers">Headers</h3></div>
+<p>
+有六级标题
+</p>
+<ul>
+<li>
+<code>= Header level1 =           </code>
+
+<li>
+<code>== Header level2 ==         </code>
+
+<li>
+<code>=== Header level3 ===       </code>
+
+<li>
+<code>==== Header level4 ====     </code>
+
+<li>
+<code>===== Header level5 =====   </code>
+
+<li>
+<code>====== Header level6 ====== </code>
+
+</ul>
+
+<div id="Wiki Syntax-Paragraphs"><h3 id="Paragraphs">Paragraphs</h3></div>
+<div id="Wiki Syntax-Lists"><h3 id="Lists">Lists</h3></div>
+<p>
+无序列表
+</p>
+<ul>
+<li>
+<code>-Bulleted list item1</code>
+
+<li>
+<code>-Bulleted list item2</code>
+
+</ul>
+<p>
+or:
+</p>
+<ul>
+<li>
+<code>* Bulleted list item1</code>
+
+<li>
+<code>* Bulleted list item2</code>
+
+</ul>
+
+<p>
+有序列表
+</p>
+<ul>
+<li>
+<code>1. Numbered list item1</code>
+
+<li>
+<code>2. Numbered list item1</code>
+
+<li>
+<code>3. Numbered list item1</code>
+
+</ul>
+<p>
+or:
+</p>
+<ul>
+<li>
+<code>1) Numbered list item1</code>
+
+<li>
+<code>2) Numbered list item1</code>
+
+<li>
+<code>3) Numbered list item1</code>
+
+</ul>
+<p>
+or:
+</p>
+<ul>
+<li>
+<code>A) Numbered list item 1</code>
+
+<li>
+<code>B) Numbered list item 2</code>
+
+<li>
+<code>C) Numbered list item 3</code>
+
+</ul>
+<p>
+or:
+</p>
+<ul>
+<li>
+<code>i) Numbered list item 1</code>
+
+<li>
+<code>ii) Numbered list item 2</code>
+
+<li>
+<code>iii) Numbered list item 3</code>
+
+</ul>
+<p>
+or:
+</p>
+<ul>
+<li>
+<code>I) Numbered list item 1</code>
+
+<li>
+<code>II) Numbered list item 2</code>
+
+<li>
+<code>III) Numbered list item 3</code>
+
+</ul>
+
+
+<div id="Wiki Syntax-Tables"><h3 id="Tables">Tables</h3></div>
+<div id="Wiki Syntax-Preformatted text"><h3 id="Preformatted text">Preformatted text</h3></div>
+<p>
+可以使用<code>{{{</code>和<code>}}}</code>来定义一个预定义格式的文本
+</p>
+
+<div id="Wiki Syntax-Mathematical formular"><h3 id="Mathematical formular">Mathematical formular</h3></div>
+<pre>
+行内公式:
+ $ \sum_i a_i^2 = 1 $
+ 
+行间公式
+ {{$
+ \sum_i a_i^2
+ =
+ 1
+ }}$
+</pre>
+
+<p>
+<a href="http:&#47;&#47;blog.csdn.net&#47;u010945683&#47;article&#47;details&#47;46757757">Mathjax基本使用公式</a>
+<a href="http:&#47;&#47;blog.csdn.net&#47;garfielder007&#47;article&#47;details&#47;51646604">LaTeX 各种命令，符号</a>
+</p>
+
+<div id="Wiki Syntax-Blockquotes"><h3 id="Blockquotes">Blockquotes</h3></div>
+<p>
+如果一个文本每一行前面都有超过4个空格，那么就是一个引用文本
+</p>
+
+<div id="Wiki Syntax-Comments"><h3 id="Comments">Comments</h3></div>
+<p>
+如果一行以<code>%%</code>开头，那么这一行就是注释，也即该行注释不会转化为HTML
+</p>
+
+<div id="Wiki Syntax-Horizontal line"><h3 id="Horizontal line">Horizontal line</h3></div>
+<p>
+<code>----</code>将会显示一个水平的横线,即<code>&lt;hr/&gt;</code>
+</p>
+
+<div id="Folding&#47;Outline"><h2 id="Folding&#47;Outline">Folding/Outline</h2></div>
+<div id="Placeholders"><h2 id="Placeholders">Placeholders</h2></div>
+<ul>
+<li>
+<code>%title</code>
+
+<li>
+<code>%nohtml</code>
+
+<li>
+<code>%template</code>
+
+<li>
+<code>%date</code>
+
+</ul>
+<div id="Lists"><h2 id="Lists">Lists</h2></div>
+<div id="Tables"><h2 id="Tables">Tables</h2></div>
+<div id="Diary"><h2 id="Diary">Diary</h2></div>
+<div id="Anchors"><h2 id="Anchors">Anchors</h2></div>
+<div id="Options"><h2 id="Options">Options</h2></div>
+<div id="Options-Registered Wiki"><h3 id="Registered Wiki">Registered Wiki</h3></div>
+<div id="Options-Temporary Wiki"><h3 id="Temporary Wiki">Temporary Wiki</h3></div>
+<div id="Options-Per-Wiki Options"><h3 id="Per-Wiki Options">Per-Wiki Options</h3></div>
+<div id="Options-Global Options"><h3 id="Global Options">Global Options</h3></div>
+<div id="Contributing"><h2 id="Contributing">Contributing</h2></div>
+<div id="Development"><h2 id="Development">Development</h2></div>
+<div id="Changelog"><h2 id="Changelog">Changelog</h2></div>
+<div id="Lincese"><h2 id="Lincese">Lincese</h2></div>
+
+
+
+<div id="目录插件"><h2 id="目录插件">目录插件</h2></div>
+<ul>
+<li>
+<a href="https:&#47;&#47;github.com&#47;yaohaixiao&#47;autocjs">https://github.com/yaohaixiao/autocjs</a>
+
+</ul>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

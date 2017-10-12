@@ -1,0 +1,158 @@
+%title Elementary Row Transformation and Matrix Elimination
+
+= Elementary Row Transformation and Matrix Elimination =
+
+
+    定义：如果两个方程组具有相同的解集，则称它们是等价的(equivalent)。
+如果有两个等价的方程组，那么只要求解其中简单的那个就行了。
+
+== Elementary Row Transformation == 
+1) 交换两个方程组中任意两个方程的位置，不会改变方程组的解集（交换矩阵的任意两行）。
+2) 将方程组的某个方程乘以一个非0实数，不会改变方程组的解集（数乘矩阵的一行）。
+3) 将方程组的某个方程的倍数加到另一个方程上，不会改变方程组的解集（矩阵的某一行加上其它行的倍数）。
+
+上面这三种操作都可以得到与之等价的方程组，称为`初等行变换`；所以可以利用初等行变换，从而得到一个相对容易求解的方程组，从而进行求解。
+
+
+\begin{cases}
+a_{11}x_1 + a_{12}x_2 + a_{13}x_3 = b_1 \\
+a_{21}x_1 + a_{22}x_2 + a_{23}x_3 = b_2 \\
+a_{31}x_1 + a_{32}x_2 + a_{33}x_3 = b_3
+\end{cases}
+
+如果在方程组上直接进行消元，那么每次都要写很多重复的x，所以把其写成增广矩阵的形式，从而更好的消元。
+\begin{equation}
+{
+	\left[ 
+		\begin{array}{ccc|c}
+		a_{11} & a_{12} & a_{13} & b_1\\ 
+		a_{21} & a_{22} & a_{23} & b_2\\ 
+		a_{31} & a_{32} & a_{33} & b_3
+		\end{array}
+	\right]
+}
+\end{equation}
+
+== Matrix Elimination ==
+n * n的矩阵如果具有唯一解，那么可以用初等行变换将其消元称严格三角形方程组，即上三角矩阵。
+
+    消元步骤如下：
+1. 选取$a_{11}$为主元(pivot)，将第i(2~n)行都减去第一行的$\frac{a_{i1}}{a_{11}}$倍，这样会将矩阵的第2~n行的第一列都变成0。
+2. 如果第i次选择的主元$a_{ii} = 0$，那么找到一个$a_{ji} \neq 0，j > i$（即从该列往下找），然后交换第i行和第j行。
+3. 如果往下找找不到，说明该列不存在主元；那么从该行的下一列寻找主元，以此类推。
+
+以此类推，就会将矩阵消元成严格的上三角矩阵，如果方程组只有唯一解的话。
+
+\begin{equation}
+{
+{
+	\left[ 
+		\begin{array}{ccc}
+		a_{11} & ?      & ?      & \cdots & ?\\ 
+		?      & ?      & ?      & \cdots & ?\\
+		\vdots & \vdots & \vdots & \ddots & ?\\
+		?      & ?      & ?      & \cdots & ?
+		\end{array} 
+	\right]
+}
+\to
+	\left[ 
+		\begin{array}{ccc}
+		a_{11} & ?      & ?      & \cdots & ?\\ 
+		0      & a_{12} & ?      & \cdots & ?\\
+		\vdots & \vdots & \vdots & \ddots & ?\\
+		0      & ?      & ?      & \cdots & ?
+		\end{array} 
+	\right]
+}
+\to
+\cdots
+\to
+{
+	\left[ 
+		\begin{array}{ccc}
+		a_{11} & ?      & ?      & \cdots & ?\\ 
+		0      & a_{22} & ?      & \cdots & ?\\
+		\vdots & \vdots & \vdots & \ddots & ?\\
+		0      & 0      & 0      & \cdots & a_{nn}
+		\end{array} 
+	\right]
+}
+\end{equation}
+
+
+例子：对下面的方程组进行消元
+
+\begin{cases}
+2x_1 + 4x_2 + 5x_3 = 3 \\
+2x_1 + 4x_2 + 3x_3 = 4 \\
+2x_1 + 5x_2 + 6x_3 = 5 \\
+\end{cases}
+
+
+将其写成增广矩阵的形式，并对该矩阵进行消元
+\begin{equation}
+{
+	\left[ 
+		\begin{array}{ccc|c}
+		2 & 4 & 5 & 3\\
+		2 & 4 & 3 & 4\\
+		2 & 5 & 6 & 5
+		\end{array}
+	\right]
+}
+\end{equation}
+
+step1. 选择$a_{11} = 2$为主元
+\begin{equation}
+{
+	\left[ 
+		\begin{array}{ccc|c}
+		2 & 4 & 5 & 3\\
+		2 & 4 & 3 & 4\\
+		2 & 5 & 6 & 5
+		\end{array}
+	\right]
+}
+\to
+{
+	\left[ 
+		\begin{array}{ccc|c}
+		2 & 4 & 5 & 3\\
+		0 & 0 & -2 & 1\\
+		0 & 1 & 1 & 2 
+		\end{array}
+	\right]
+}
+\end{equation}
+step2. 由于$a_{22} = 0$，所以我往下寻找该列不为0的行，并与第2行交换
+\begin{equation}
+{
+	\left[ 
+		\begin{array}{ccc|c}
+		2 & 4 & 5 & 3\\
+		0 & 0 & -2 & 1\\
+		0 & 1 & 1 & 2 
+		\end{array}
+	\right]
+}
+\to
+{
+	\left[ 
+		\begin{array}{ccc|c}
+		2 & 4 & 5 & 3\\
+		0 & 1 & 1 & 2 \\
+		0 & 0 & -2 & 1
+		\end{array}
+	\right]
+}
+\end{equation}
+
+这种消元的方法叫做高斯消元（Gaussian Elimination)，最后要进行回到才能够解出$x_1,x_2,x_3$。
+
+还有一种消元的方法叫做高斯约旦消元（Gauss-Jordan Elimination），该方法选取主元之后，不仅往下消元，还往上消元，这种消元方法不需要回带就能够解出$x_1,x_2,x_3$（前提是方程组只有唯一解）。
+
+----
+高斯消元时间复杂度：$O(\frac{1}{3}n^3+n^2)$
+
+高斯约旦消元时间复杂度：$O(n^3+n)$

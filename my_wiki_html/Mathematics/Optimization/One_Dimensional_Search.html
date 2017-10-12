@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>One Dimensional Search</title>
+    <link rel="Stylesheet" type="text/css" href="../../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../../about.html">About</a>
+    <a href="../../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+
+<div id="One Dimensional Search"><h1 id="One Dimensional Search">One Dimensional Search</h1></div>
+
+
+<div id="One Dimensional Search-What is One Dimensional Search"><h2 id="What is One Dimensional Search">What is One Dimensional Search</h2></div>
+<blockquote>
+一维搜索的理论是建立在整个最优化理论之下的。
+</blockquote>
+	
+<p>
+最优化算法的基本理论是：
+</p>
+<ol>
+<li>
+求下降方向\(p_k\)，使得\(\nabla f(x_k) p_k &lt; 0\)
+
+<li>
+求取步长\(\alpha_k\)，使得\(\alpha_k\)，使得\(f(x_k + \alpha_k p_k) &lt; f(x_k)\)
+
+<li>
+返回迭代，直至序列\(\{x_k\}\)收敛。
+
+</ol>
+
+
+<p>
+一维搜索是指选择合适的\(\alpha_k\)，使得
+$$
+f(x_k + \alpha_k p_k) = \min \limits_{\alpha &gt; 0} f(x_k + \alpha p_k)
+$$
+</p>
+
+<p>
+按这种方法确定的步长因子叫做<code>最优步长因子</code>。这种方法的想法是，既然函数的下降方向已经确定了，为何不沿着这个方向找到使目标函数取极小的点呢。
+</p>
+
+<p>
+而且，这种想法也是容易办到的，因为\(f(x_k + \alpha p_k)\)是以\(\alpha\)为变量的一元函数\(\phi(\alpha)=f(x_k+\alpha p_k)\)。
+</p>
+
+<p>
+例如：
+假设函数\(f(x,y) = x^2+y^2+2xy\)在\((1,1)\)点已经确定了方向\((2,3)\)是下降方向，那么一维搜索是要找到合适的\(\alpha\)，使得
+\(\phi(\alpha)=f(1+2\alpha,1+3\alpha)=(1+2\alpha)^2+(1+3\alpha)^2+2(1+2\alpha)(1+3\alpha)\)的函数值最小。
+</p>
+
+<hr />
+<p>
+求一元函数极小点的方法称为直线搜索或者一维搜索，许多最优化的问题都把多维问题转为一维问题。因此可以说一维搜索是最优化方法的一个重要支柱
+</p>
+
+<ul>
+<li>
+这种方法的优点是：它使函数值在搜索方向上下降得最多
+
+<li>
+缺点是：计算量较大
+
+</ul>
+
+
+<div id="One Dimensional Search-The Type of One Dimensional Search"><h2 id="The Type of One Dimensional Search">The Type of One Dimensional Search</h2></div>
+<p>
+一维搜索分为<code>精确搜索</code>和<code>不精确搜索</code>两类。
+</p>
+<ul>
+<li>
+精确搜索：为了在搜索方向上下降得最多，所以要精确找到最优的步长。
+
+<ul>
+<li>
+<a href="Golden_Section_Method.html">Golden Section Method</a>
+
+<li>
+<a href="Parabolic_Interpolation.html">Parabolic Interpolation</a>
+
+</ul>
+<li>
+不精确搜索：当迭代点的距离离极小点较远时，精确求解最优步长因子对问题没有太大的意义。
+
+<ul>
+<li>
+<a href="Inexact_One_Dimensional_Search.html">Inexact One Dimensional Search</a>
+
+</ul>
+</ul>
+
+
+<div id="One Dimensional Search-确定搜索区间"><h2 id="确定搜索区间">确定搜索区间</h2></div>
+<p>
+<code>精确搜索</code>和<code>不精确搜索</code>都是建立在函数搜索区间是单谷函数的基础上，如果函数不是单谷函数，那么要进行搜索区间的确定。
+</p>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

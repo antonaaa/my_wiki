@@ -1,0 +1,71 @@
+%title Gradient Descent
+
+= Gradient Descent =
+
+
+    前面所说的一维搜索是在确定了下降方向之后，求合适步长$\alpha_k$的算法。而梯度下降法是求下降方向的算法。
+	
+	
+== 梯度下降法的定义 ==
+由方向导数的定义$\frac{\partial f(x)}{\partial p} = \nabla^T f(x) p = | \nabla^T f(x)| |p| \cos \theta = | \nabla^T f(x)| \cos \theta$(其中$p$是单位方向向量)，可知：
+
+* $p$是梯度方向$\nabla f(x)$的方向单位向量时，$\cos \theta = 1$，方向导数最大（当前位置上升最快的方向）；
+* 当$p$是负梯度方向$-\nabla f(x)$的方向单位向量时，$\cos \theta = -1$，方向导数最小，（当前位置下降最快的方向）；
+
+----
+由上面这个事实就能得到梯度下降法是如何工作的了
+
+* 当迭代了k次之后，来到了迭代点$x_k$
+* 现在要进行第$k + 1$次迭代，那么应该负梯度方向$-\nabla f(x_k)$进行一维搜索，确定合适的步长
+* 所以坐标点的迭代公式为$x_{k+1} = x_k - \alpha_k \nabla f(x_k)$
+
+
+== 算法流程 ==
+1. 选定初始点$x_k$
+2. 计算初始点的函数值和梯度，$f_k := f(x_k), g_k := \nabla f(x_k)$
+3. 计算下一个迭代点$x_{k+1} := x_k - \alpha_k g_k$，此时应该调用一维搜索确定合适的步长。
+4. 计算$f_{x+1} := f(x_{k+1}), g_{k+1} := \nabla f(x_{k+1})$，判断是否满足终止准则 （终止准则的分析应该另外写成一章，此处附上链接）
+5. 如果满足，则输出$x_{k+1}$和$f_{k+1}$。
+6. 如果不满足，则令$x_k := x_{k+1}, f_k := f_{k+1}, g_k := g_{k+1}$，返回第2步继续迭代。
+
+
+== 正定二次函数的最优步长 ==
+    正定二次函数$f(x) = \frac{1}{2} x^TQx + bx + c$在负梯度方向上的最优步长是有公式可以求的。
+	
+	
+如果每次沿着负梯度方向都走最优步长，那么相邻两次迭代点的梯度是正交的。
+
+[[local:./resources/梯度下降1.png|{{local:./resources/梯度下降1.png|函数图像}}]]
+
+* $\nabla^T f(x_{k+1}) \nabla f(x_k) = 0$
+----
+
+* $f(x) = \frac{1}{2} x^TQx + bx + c$
+* $\nabla^T f(x) = Qx + b$
+* $Q^T = Q$
+* $x_{k+1} = x_k - \alpha_k \nabla f(x_k)$
+由上面的已知条件可以推出
+* $\Rightarrow \;$  $\nabla^T f(x_{k+1}) \nabla f(x_k) = (Q(x_k - \alpha_k \nabla f(x_k) + b))^T \nabla f(x_k) = 0$。
+* $\Rightarrow \;$ $(Q x_k  + b- \alpha_k Q \nabla f(x_k))^T \nabla f(x_k) = 0$
+* $\Rightarrow \;$ $(\nabla f(x_k) - \alpha_k \nabla f(x_k)Q)^T \nabla f(x_k) = 0$
+* $\Rightarrow \;$ $(\nabla^T f(x_k) - \alpha_k \nabla^T f(x_k)Q) \nabla f(x_k) = 0$
+* $\Rightarrow \;$ $\nabla^T f(x_k) \nabla f(x_k) - \alpha_k \nabla^T f(x_k)Q \nabla f(x_k) = 0$
+* $\Rightarrow \;$ $\nabla^T f(x_k) \nabla f(x_k) = \alpha_k \nabla^T f(x_k)Q \nabla f(x_k)$
+* $\Rightarrow \;$ $\alpha_k = \frac{\nabla^T f(x_k) \nabla f(x_k)}{\nabla^T f(x_k) Q \nabla f(x_k)}$
+
+所以正定二次函数$f(x) = \frac{1}{2} x^TQx + bx + c$在负梯度方向上的最优步长公式是：$\alpha_k = \frac{\nabla^T f(x_k) \nabla f(x_k)}{\nabla^T f(x_k) Q \nabla f(x_k)}$
+
+所以迭代公式是：$x_{k+1} = x_k - \frac{\nabla^T f(x_k) \nabla f(x_k)}{\nabla^T f(x_k) Q \nabla f(x_k)} \nabla f(x_k)$
+
+== 梯度下降法的锯齿现象 ==
+	如果每次沿负梯度方向都是走最优步长，那么相邻两次迭代的点的梯度是垂直的，称这种现象为锯齿现象
+[[local:./resources/梯度下降2.png|{{local:./resources/梯度下降2.png|函数图像}}]]
+
+直观上上：
+
+* 远离极值点时，每次迭代都有可能使函数值有较多的下降
+* 靠近极值点时，由于锯齿现象，使得每次迭代行进的距离缩短，因而收敛速度不快，这正是梯度下降法的缺点所在。
+	
+== 梯度下降法的收敛速度 ==
+
+梯度下降法对于正定二次函数在任意的初始点都是收敛的，而且恰好是线性收敛

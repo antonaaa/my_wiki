@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Pointer_alignment_in_OpenCV</title>
+    <link rel="Stylesheet" type="text/css" href="../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../about.html">About</a>
+    <a href="../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+<div id="OpenCV中的指针对齐"><h1 id="OpenCV中的指针对齐">OpenCV中的指针对齐</h1></div>
+
+<p>
+<code>core.hpp</code>中在305行左右声明了`
+</p>
+<ul>
+<li>
+<code>CV_EXPORTS void* fastMalloc(size_t bufSize);</code>
+
+<li>
+<code>CV_EXPORTS void fastFree(void* ptr);</code>
+
+</ul>
+<p>
+这两个函数，分别用于分配和释放内存，这两个函数的定义放在了<code>alloc.cpp</code>中的62行左右。
+</p>
+
+<p>
+<code>core.hpp</code>中在331行左右定义了两个辅助函数来配合上面的<code>fastMalloc</code>函数分配内存。
+</p>
+
+<ul>
+<li>
+<code>alignSize</code>
+
+<li>
+该函数的作用是得到一个最小的大于sz，且能够整除n的数。用数学表达式表达出来就是(sz + n - 1) / n * n;
+	这里使用位运算来实现，显然是为了更快一些。
+
+<li>
+由于n是2的次幂，例如如果n是<code>0000 1000</code>，那么-n就是<code>1111 1000</code>，也就是说-n的作用是把1左边的0都变成1.
+
+<li>
+n-1的二进制表示是<code>0000 0111</code>
+
+<li>
+所以sz+n-1之后，要么不产生进位，那么说明sz刚好是n的倍数；要么产生进位，那么与n进行<code>&amp;</code>操作之后，把最右边的3位全变成0，也就变成了n的倍数。
+
+</ul>
+
+<ul>
+<li>
+alignPtr
+
+<li>
+原理同alignSize，alignPtr返回一个内存地址，该函数&gt;=ptr的一个地址，且该地址能被n整除。
+
+</ul>
+<hr />
+
+<pre cpp>
+template&lt;typename _Tp&gt; static inline _Tp* alignPtr(_Tp* ptr, int n=(int)sizeof(_Tp))
+{
+    return (_Tp*)(((size_t)ptr + n-1) &amp; -n);
+}
+static inline size_t alignSize(size_t sz, int n)
+{
+    assert((n &amp; (n - 1)) == 0); // n is a power of 2
+    return (sz + n-1) &amp; -n;
+}
+</pre>
+
+<pre cpp>
+void* fastMalloc( size_t size )
+{
+    uchar* udata = (uchar*)malloc(size + sizeof(void*) + CV_MALLOC_ALIGN);
+    if(!udata)
+        return OutOfMemoryError(size);
+    uchar** adata = alignPtr((uchar**)udata + 1, CV_MALLOC_ALIGN);
+    adata[-1] = udata;
+    return adata;
+}
+
+void fastFree(void* ptr)
+{
+    if(ptr)
+    {
+        uchar* udata = ((uchar**)ptr)[-1];
+        CV_DbgAssert(udata &lt; (uchar*)ptr &amp;&amp;
+               ((uchar*)ptr - udata) &lt;= (ptrdiff_t)(sizeof(void*)+CV_MALLOC_ALIGN));
+        free(udata);
+    }
+}
+</pre>
+
+<ul>
+<li>
+第<code>3</code>行在参数<code>size</code>的基础上，额外加上了一个指针的大小，和CV_MALLOC_ALIGN大小的内存
+
+<li>
+第<code>6</code>行进行了指针对齐，<code>alignPtr</code>，
+
+</ul>
+
+
+<ul>
+<li>
+<a href="http:&#47;&#47;blog.csdn.net&#47;lming_08&#47;article&#47;details&#47;26821963?utm_source=tuicool&amp;utm_medium=referral">OpenCV源码之内存分配-指针对齐</a>
+
+<li>
+<a href="http:&#47;&#47;www.cnblogs.com&#47;summerRQ&#47;articles&#47;2408767.html">opencv中的安全指针和指针对齐</a>
+
+</ul>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

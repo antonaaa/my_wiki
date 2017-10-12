@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>像素之间的一些基本关系</title>
+    <link rel="Stylesheet" type="text/css" href="../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../about.html">About</a>
+    <a href="../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+<div id="像素之间的一些基本关系"><h1 id="像素之间的一些基本关系">像素之间的一些基本关系</h1></div>
+<ul>
+<li>
+相邻像素(Neighbors of a Pixel)
+
+<ul>
+<li>
+4邻域(4 neighbors)
+
+<li>
+D邻域(对角邻域）(diagonal neighbors)
+
+<li>
+8邻域(8 neighbors)
+
+</ul>
+<li>
+邻接(Adjacency)
+
+<ul>
+<li>
+4邻接
+
+<li>
+8邻接
+
+<li>
+m邻接
+
+</ul>
+<li>
+路径(Path)
+
+<ul>
+<li>
+需要指定邻接类型
+
+</ul>
+<li>
+连通性(Connected)
+
+<ul>
+<li>
+需要指定邻接类型
+
+</ul>
+<li>
+连通分量(Connected Component)
+
+<ul>
+<li>
+需要指定邻接类型
+
+</ul>
+<li>
+连通集(Connected Set)
+
+<ul>
+<li>
+需要指定邻接类型
+
+</ul>
+<li>
+区域(Region)
+
+<ul>
+<li>
+需要指定邻接类型
+
+</ul>
+<li>
+边界(Boundary)
+
+<ul>
+<li>
+需要指定邻域类型
+
+</ul>
+<li>
+距离
+
+</ul>
+
+<hr />
+<p>
+邻域和连通是不一样的，邻域只要考虑两个像素的位置关系， 连通不仅要考虑两个像素的位置关系，还要考虑其灰度值满足相似性原则。
+</p>
+
+<div id="像素之间的一些基本关系-相邻像素"><h2 id="相邻像素">相邻像素</h2></div>
+<div id="像素之间的一些基本关系-相邻像素-4邻域"><h3 id="4邻域">4邻域</h3></div>
+<ul>
+<li>
+像素p(x,y)所相邻的4邻域是
+
+<ul>
+<li>
+(x + 1, y)
+
+<li>
+(x - 1, y)
+
+<li>
+(x, y + 1)
+
+<li>
+(x, y - 1)
+
+</ul>
+<li>
+用\(N_4(p)\)表示像素p的4邻域
+
+</ul>
+<p>
+<a href="..&#47;..&#47;my_wiki&#47;Digital_Image_Processing&#47;4邻域.png"><img src="../../my_wiki/Mathematics/Optimization/4邻域.png" alt="4邻域图片" /></a>
+</p>
+<div id="像素之间的一些基本关系-相邻像素-D邻域"><h3 id="D邻域">D邻域</h3></div>
+<ul>
+<li>
+像素p(x,y)所相邻的D邻域(对角邻域）是
+
+<ul>
+<li>
+(x + 1, y + 1)
+
+<li>
+(x + 1, y - 1)
+
+<li>
+(x - 1, y + 1)
+
+<li>
+(x - 1, y - 1)
+
+</ul>
+<li>
+用\(N_D(p)\)表示像素p的D邻域
+
+</ul>
+<p>
+<a href="..&#47;..&#47;my_wiki&#47;Digital_Image_Processing&#47;D邻域"><img src="../../my_wiki/Mathematics/Optimization/D邻域.png" alt="D邻域图片" /></a>
+</p>
+<div id="像素之间的一些基本关系-相邻像素-8邻域"><h3 id="8邻域">8邻域</h3></div>
+<ul>
+<li>
+像素8邻域的点就是4邻域的点 + D邻域的点
+
+<li>
+用\(N_8(p)\)表示p的8邻域， \(N_8(p) = N_4(p) + N_D(p)\)
+
+</ul>
+
+<p>
+<a href="..&#47;..&#47;my_wiki&#47;Digital_Image_Processing&#47;8邻域.png"><img src="../../my_wiki/Mathematics/Optimization/8邻域.png" alt="8邻域图片" /></a>
+</p>
+
+
+<div id="像素之间的一些基本关系-像素的连通性"><h2 id="像素的连通性">像素的连通性</h2></div>
+<ul>
+<li>
+连通性是描述<code>区域</code>和<code>边界</code>的重要概念
+
+<li>
+两个像素连通的必要条件是：
+
+<ul>
+<li>
+两个像素的位置是否相邻
+
+<li>
+两个像素的灰度值是否满足特定的相似性准则（或者是否相等）
+
+</ul>
+</ul>
+<hr />
+
+<p>
+集合<code>V</code>是定义连接性的灰度值集合。
+</p>
+<div id="像素之间的一些基本关系-像素的连通性-4邻接"><h3 id="4邻接">4邻接</h3></div>
+<ul>
+<li>
+如果像素p和q都在集合\(N_4(p)\)中，且像素p的值和像素q的值都在集合<code>V</code>中，则称这两个像素是4连通的。
+
+</ul>
+<p>
+<a href="..&#47;..&#47;my_wiki&#47;Digital_Image_Processing&#47;4邻接.png"><img src="../../my_wiki/Mathematics/Optimization/4邻接.png" alt="4连通图片" /></a>
+</p>
+<div id="像素之间的一些基本关系-像素的连通性-8邻接"><h3 id="8邻接">8邻接</h3></div>
+<ul>
+<li>
+如果像素p和q都在集合\(N_8(p)\)中，且像素p的值和像素q的值都在集合<code>V</code>中，则称这两个像素是8连通的。
+
+</ul>
+<p>
+<a href="..&#47;..&#47;my_wiki&#47;Digital_Image_Processing&#47;8邻接.png"><img src="../../my_wiki/Mathematics/Optimization/8邻接.png" alt="8连通图片" /></a>
+</p>
+<div id="像素之间的一些基本关系-像素的连通性-m邻接"><h3 id="m邻接">m邻接</h3></div>
+<ul>
+<li>
+对于具有值<code>V</code>的像素p和q，如果
+
+<ul>
+<li>
+q在集合\(N_4(p)\)中，或
+
+<li>
+q在集合\(N_D(p)\)中，并且\(N_4(p)\)和\(N_4(q)\)的交集为空（没有值为<code>V</code>的像素），则称两个像素是m连通的，即4连通和D连通的混合连通
+
+</ul>
+</ul>
+<p>
+<a href="..&#47;..&#47;my_wiki&#47;Digital_Image_Processing&#47;m邻接.png"><img src="../../my_wiki/Mathematics/Optimization/m邻接.png" alt="m连通图片" /></a>
+</p>
+
+
+<p>
+8连通存在二义性，所以使用m连通来改进8邻接。
+</p>
+
+
+<div id="像素之间的一些基本关系-路径(Path)"><h2 id="路径(Path)">路径(Path)</h2></div>
+<ul>
+<li>
+像素p(x,y)到像素q(s,t)的路径是一系列像素坐标序列,\((x_0,y_0),(x_1,y_1),...,(x_n,y_n)\)，路径的长度是n，如果\((x_0,y_0) = (x_n,y_n)\)，
+
+</ul>
+<p>
+则路径是一个闭合路径。
+</p>
+
+<ul>
+<li>
+根据指定邻接类型的不同，可以分为4-paths,8-paths,m-paths
+
+</ul>
+<div id="像素之间的一些基本关系-连通性(Connected)"><h2 id="连通性(Connected)">连通性(Connected)</h2></div>
+<ul>
+<li>
+S是图像的一个像素子集
+
+<li>
+像素p和像素q之间存在一条路径，且该路径上的像素点都在集合S中，那么说p和q是连通的。
+
+</ul>
+
+<div id="像素之间的一些基本关系-连通分量(Connected Component)"><h2 id="连通分量(Connected Component)">连通分量(Connected Component)</h2></div>
+<ul>
+<li>
+有了连通性，自然就有了连通分量
+
+</ul>
+
+<div id="像素之间的一些基本关系-连通集(Connected Set)"><h2 id="连通集(Connected Set)">连通集(Connected Set)</h2></div>
+<ul>
+<li>
+如果子集S中只有一个连通分量，那么称子集S为连通集。
+
+</ul>
+<div id="像素之间的一些基本关系-区域(Region)"><h2 id="区域(Region)">区域(Region)</h2></div>
+<ul>
+<li>
+如果像素子集R是一个连通集，那么称R是一个区域。
+
+<li>
+如果\(R_i U R_j\)是一个连通集，那么区域\(R_i\)和区域\(R_j\)是邻接的(Adjacency)。
+
+<li>
+不邻接的区域称为disjoint regions
+
+<li>
+对于区域的邻接，只考虑4邻接和8邻接。
+
+<li>
+对于8邻接，下面的两个区域是邻接的。对于4邻接，则是不邻接的。
+
+</ul>
+
+<p>
+<a href="..&#47;..&#47;my_wiki&#47;Digital_Image_Processing&#47;example_of_region_adjacency.png"><img src="../../my_wiki/Mathematics/Optimization/example_of_region_adjacency.png" alt="区域邻接例子图片" /></a>
+</p>
+
+<div id="像素之间的一些基本关系-边界(Boundary)"><h2 id="边界(Boundary)">边界(Boundary)</h2></div>
+<p>
+假设图像包含<code>K</code>个不相邻的区域(disjoint regions)，\(R_k,k = 1, 2, ..., K\)，这些区域都没有碰到图像的边界(border)
+设\(R_u\)是这<code>K</code>个区域的并集，\((R_u)^c\)是\(R_u\)的补集。
+</p>
+<ul>
+<li>
+前景 ： 所有在集合\(R_u\)的像素点称为前景（foreground）
+
+<li>
+背景 ： 所有在集合\((R_u)^c\)的像素点称为背景（background）
+
+</ul>
+
+
+<ul>
+<li>
+内边界
+
+<ul>
+<li>
+区域R的内边界，是一些在R中的像素点的集合，这些像素点的邻域中至少有一个点属于\(R_c\)。
+
+<li>
+必须指定邻域的类型，4邻域，D邻域，8邻域
+
+<li>
+如果指定的是4邻域，那么下图中被圈中的1就不属于内边界
+
+<li>
+如果指定的是8邻域，那么下图中被圈中的1属于内边界
+
+</ul>
+</ul>
+
+<p>
+<a href="..&#47;..&#47;my_wiki&#47;Digital_Image_Processing&#47;内边界例子.png"><img src="../../my_wiki/Mathematics/Optimization/内边界例子.png" alt="内边界例子图片" /></a>
+</p>
+
+
+<ul>
+<li>
+外边界
+
+<ul>
+<li>
+区域R的外边界是包围目标区域的像素点的集合，这些像素点的集合都属于背景\(R_c\)。
+
+<li>
+下图中，沿着1形成闭合通路的0的集合就是外边界。
+
+</ul>
+</ul>
+<p>
+<a href="..&#47;..&#47;my_wiki&#47;Digital_Image_Processing&#47;外边界例子.png"><img src="../../my_wiki/Mathematics/Optimization/外边界例子.png" alt="外边界例子图片" /></a>
+</p>
+
+
+<div id="像素之间的一些基本关系-距离"><h2 id="距离">距离</h2></div>
+<blockquote>
+注意\(D_4\)和\(D_8\)<code>距离</code>和<code>路径距离</code>是不一样的概念。这里的距离<code>只和</code>像素点的坐标有关，而考虑路径距离的话，不仅要考虑像素点的坐标，还要考虑像素点像素值的相似性。
+</blockquote>
+<ul>
+<li>
+欧几里得距离（Euclidean Distance）
+
+<li>
+城市距离（City-block Distance）
+
+<ul>
+<li>
+ 其中\(D_4 = 1\)的像素是(x, y)的4邻域
+
+</ul>
+</ul>
+<p>
+$$
+D_4(p, q) = |x - s| + |y - t|
+$$
+</p>
+
+<p>
+<a href="..&#47;..&#47;my_wiki&#47;Digital_Image_Processing&#47;城市距离.png"><img src="../../my_wiki/Mathematics/Optimization/城市距离.png" alt="城市距离例子图片" /></a>
+</p>
+<ul>
+<li>
+棋盘距离（Chessboard Distance）
+
+<ul>
+<li>
+其中\(D_4 = 1\)的像素是(x, y)的4邻域
+
+</ul>
+</ul>
+<p>
+$$
+D_8(p, q) = max(|x - s|, |y - t|)
+$$
+</p>
+
+
+<p>
+<a href="..&#47;..&#47;my_wiki&#47;Digital_Image_Processing&#47;棋盘例子.png"><img src="../../my_wiki/Mathematics/Optimization/棋盘距离.png" alt="棋盘例子图片" /></a>
+</p>
+
+<hr />
+<div id="像素之间的一些基本关系-参考"><h2 id="参考">参考</h2></div>
+<ol>
+<li>
+<a href="http:&#47;&#47;blog.csdn.net&#47;ddiicey&#47;article&#47;details&#47;73864470">数字图像处理基础之--像素间的关系（邻接/邻接）</a>
+
+<li>
+<a href="http:&#47;&#47;blog.csdn.net&#47;ningyaliuhebei&#47;article&#47;details&#47;17072049">图像处理基础（三）_像素之间的3种关系</a>
+
+<li>
+<a href="http:&#47;&#47;blog.csdn.net&#47;carson2005&#47;article&#47;details&#47;27581339">连通区域分析</a>
+
+<li>
+<a href="http:&#47;&#47;www.cnblogs.com&#47;tiandsp&#47;archive&#47;2013&#47;04&#47;26&#47;3045747.html">内外边界跟踪</a>
+
+</ol>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

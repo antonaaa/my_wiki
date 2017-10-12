@@ -1,0 +1,145 @@
+= 重装OSX时需要安装哪些软件(命令) =
+== 命令行软件 ==
+* install Homeberw
+{{{shell
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"  
+}}}
+
+* install wget
+{{{shell
+brew install wget
+}}}
+
+* install iterm2
+{{{shell
+break cask install iterm2
+}}}
+
+* change default shell to zsh
+{{{shell
+show the all system shells : cat /etc/shells
+show the current system shell : echo $SHELL
+change the default shee : chsh -s /bin/zsh
+}}}
+
+* install oh-my-zsh
+{{{shell
+git clone https://github.com/robbyrussell/oh-my-zsh
+mv oh-my-zsh ~/.oh-my-zsh
+cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+}}}
+
+* install pip
+{{{shell
+sudo easy_install pip
+使用pip下载的包存在 /Library/Python/2.7/site-packages/ 中
+}}}
+
+* install jedi
+{{{shell
+pip install jedi
+installed path : /Library/Python/2.7/site-packages/jedi/
+}}}
+
+* install ctags
+{{{shell
+brew install ctags
+}}}
+
+* install fonts
+{{{shell
+git clone https://github.com/powerline/fonts.git --depth=1
+fonts/install.sh
+Powerline fonts installed to /Users/ANTON/Library/Fonts
+rm -rf fonts
+}}}
+
+* set the iterm2 fonts
+{{{shell
+Profiles->Text
+font : Source Code Pro for Powerline
+font typeface : Italic
+font size : 17pt
+17pt Source Code Pro Italic for Powerline
+}}}
+
+* install dream-vim
+{{{shell
+git clone https://github.com/gzmviavia/dream-vim.git ~/.vim
+sudo python setup.py
+}}}
+
+* install vim
+{{{shell
+brew install vim --with-lua --with-override-system-vim
+因为python补全插件jedi需要最新版本的vim，不然这个插件就会出错
+}}}
+
+* install tree
+{{{shell
+brew install tree
+tree 显示中文乱码， 可通过参数-N解决， 参数-L num用于控制递归的层数
+}}}
+
+* install cmatrix
+{{{shell
+brew install cmatrix
+}}}
+
+* install gdb
+{{{shell
+brew install gdb
+在应用程序中选择其他，并进入钥匙串访问
+点击左上角的钥匙串访问->证书助理->创建证书
+证书的名称为gdb-cert
+身份类型为自签名根证书
+勾选让我覆盖这些值
+证书类型为代码签名
+一直选择下一步，然后选择系统（而不是登录）
+创建完成之后双击证书，然后选择总是信任，然后重启电脑
+codesign -f -s "gdb-cert" <gnat_install_prefix>/bin/gdb
+http://stackoverflow.com/questions/13913818/how-to-get-a-codesigned-gdb-on-osx
+}}}
+
+* install ipython
+{{{shell 
+brew install ipython		这个下载的ipython是使用python3作为解释器
+pip install ipython		使用python2.7作为解释器
+pip3 install ipython		使用python3作为解释器
+}}}
+
+* install tmux
+{{{shell
+brew install tmux
+}}}
+
+* install you-get
+{{{
+brew install you-get
+}}}
+	
+* install mysql
+{{{
+brew isntall mysql
+配置文件my.cnf地址 : /usr/local/etc/
+mysql数据存储的地址: /usr/local/var/mysql
+}}}
+
+* install opencv
+{{{
+//build without python2 support
+brew isntall mysql --without-python
+}}}
+== 图形界面软件 ==
+* QQ
+* Microsoft office 破解版
+* 迅雷
+* 网易云音乐
+* 欧陆词典破解版
+* 印象笔记
+* MPlayerX
+* The Unarchiver
+* 搜狗输入法
+* Foxit Reader
+
+

@@ -1,0 +1,119 @@
+%title Linear Equations and It's Geometric Interpretation
+
+= Linear Equations and It's Geometric Interpretation =
+
+矩阵方程有两种几何解释：
+
+%% 线性方程组和向量方程
+\begin{cases} 
+线性方程组, row \; picture\\
+向量方程, column \; picture
+\end{cases}
+
+
+以3 * 3的矩阵方程为例
+
+
+\begin{equation}
+{
+	\left[ 
+		\begin{array}{ccc}
+		a_{11} & a_{12} & a_{13}\\ 
+		a_{21} & a_{22} & a_{23}\\ 
+		a_{31} & a_{32} & a_{33}
+		\end{array} 
+	\right]
+}
+\times
+{
+	\left[ 
+		\begin{array}{c}
+		x_1\\
+		x_2\\
+		x_3
+		\end{array}
+	\right]
+}
+=
+{
+	\left[ 
+		\begin{array}{c}
+		b_1\\
+		b_2\\
+		b_3
+		\end{array}
+	\right]
+}
+\ \ \ \ \ \ \ \ \ \     记为Ax=b
+\end{equation}
+
+== Row Picture ==
+\begin{cases}
+a_{11}x_1 + a_{12}x_2 + a_{13}x_3 = b_1 \\
+a_{21}x_1 + a_{22}x_2 + a_{23}x_3 = b_2 \\
+a_{31}x_1 + a_{32}x_2 + a_{33}x_3 = b_3
+\end{cases}
+
+    线性方程组的几何解释为：每个方程组代表一个超平面，n个线性方程代表其在n维空间的时候有交点。
+* 每个线性方程确定了n维空间中的一个超平面（n代表未知变量x的个数）。
+* 3 * 3的线性方程组是否有解，与这3个线性方程所对应的平面是否有交点相关。
+	- 如果3个平面没有交点，`无解`。
+	- 如果只有一个交点，`唯一解`。
+	- 如果相交于条直线或者一个超平面，`无数解`。
+
+== Column Picture ==
+
+\begin{equation}
+x_1
+{
+	\left[ 
+		\begin{array}{c}
+		a_{11} \\
+		a_{21} \\
+		a_{31}
+		\end{array} 
+	\right]
+}
++
+x_2
+{
+	\left[ 
+		\begin{array}{c}
+		a_{12} \\
+		a_{22} \\
+		a_{32}
+		\end{array}
+	\right]
+}
++
+x_3
+{
+	\left[ 
+		\begin{array}{c}
+		a_{13} \\
+		a_{23} \\
+		a_{33}
+		\end{array}
+	\right]
+}
+=
+{
+	\left[ 
+		\begin{array}{c}
+		b_1\\
+		b_2\\
+		b_3
+		\end{array}
+	\right]
+}
+\end{equation}
+
+    向量方程的几何解释为：列向量的线性组合。
+* 3 * 3的矩阵方程是否有解，与3个向量组成的线性空间相关。
+	- 如果3个向量线性无关，那么3个向量的线性组合能得到三维空间中的所有点；所以 对任意的向量$\vec{b}$，都有解，且只有`唯一解`。
+	- 如果前2个向量的线性组合能够得的第三个向量，那么这3个向量的线性组合是一个平面；当向量$\vec{b}$落在该平面内时，才有解，且有`无数解`，因为第3个向量的系数可以随意取。
+	- 如果向量$\vec{b}$在该平面之外，那么`无解`。
+
+
+== Conclusions ==
+所以，对于`线性方程组`和`向量方程`的求解都可以归结于如何`求解矩阵方程`。

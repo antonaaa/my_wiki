@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mat类源码解读</title>
+    <link rel="Stylesheet" type="text/css" href="../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../about.html">About</a>
+    <a href="../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+
+
+<p>
+create(int _dims, ...)定义在matrix.cpp : 184
+</p>
+<pre>
+DataDepth : core.hpp 410
+MatExpr : mat.hpp 1230
+</pre>
+
+<pre cpp>
+//core.hpp
+template&lt;typename _Tp&gt; class Size_;
+template&lt;typename _Tp&gt; class Point_;
+template&lt;typename _Tp&gt; class Rect_;
+template&lt;typename _Tp, int cn&gt; class Vec;
+template&lt;typename _Tp, int m, int n&gt; class Matx;
+typedef Vec&lt;uchar, 2&gt; Vec2b;
+typedef Vec&lt;uchar, 3&gt; Vec3b;
+typedef Vec&lt;uchar, 4&gt; Vec4b;
+
+typedef Vec&lt;short, 2&gt; Vec2s;
+typedef Vec&lt;short, 3&gt; Vec3s;
+typedef Vec&lt;short, 4&gt; Vec4s;
+
+typedef Vec&lt;ushort, 2&gt; Vec2w;
+typedef Vec&lt;ushort, 3&gt; Vec3w;
+typedef Vec&lt;ushort, 4&gt; Vec4w;
+
+typedef Vec&lt;int, 2&gt; Vec2i;
+typedef Vec&lt;int, 3&gt; Vec3i;
+typedef Vec&lt;int, 4&gt; Vec4i;
+typedef Vec&lt;int, 6&gt; Vec6i;
+typedef Vec&lt;int, 8&gt; Vec8i;
+
+typedef Vec&lt;float, 2&gt; Vec2f;
+typedef Vec&lt;float, 3&gt; Vec3f;
+typedef Vec&lt;float, 4&gt; Vec4f;
+typedef Vec&lt;float, 6&gt; Vec6f;
+
+typedef Vec&lt;double, 2&gt; Vec2d;
+typedef Vec&lt;double, 3&gt; Vec3d;
+typedef Vec&lt;double, 4&gt; Vec4d;
+typedef Vec&lt;double, 6&gt; Vec6d;
+
+typedef Point_&lt;int&gt; Point2i;
+typedef Point_&lt;int64&gt; Point2l;
+typedef Point2i Point;
+typedef Size_&lt;int&gt; Size2i;
+typedef Size_&lt;int64&gt; Size2l;
+typedef Size_&lt;double&gt; Size2d;
+typedef Size2i Size;
+typedef Rect_&lt;int&gt; Rect;
+typedef Point_&lt;float&gt; Point2f;
+typedef Point_&lt;double&gt; Point2d;
+typedef Size_&lt;float&gt; Size2f;
+typedef Point3_&lt;int&gt; Point3i;
+typedef Point3_&lt;float&gt; Point3f;
+typedef Point3_&lt;double&gt; Point3d;
+</pre>
+<div id="Mat类源码解读"><h1 id="Mat类源码解读">Mat类源码解读</h1></div>
+
+<ul>
+<li>
+Mat类有以下成员变量
+<pre cpp>
+int flags;
+int dims;
+int rows, cols;
+uchar* data;
+
+int* refcount;
+
+uchar* datastart;
+uchar* dataend;
+uchar* datalimit;
+
+MatAllocator* allocator;
+
+MSize size;
+MStep step;
+</pre>
+
+</ul>
+
+<ul>
+<li>
+Mat类有以下成员函数
+<pre cpp>
+</pre>
+
+</ul>
+
+
+<hr />
+<pre>
+typedef unsigned char uchar;
+</pre>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

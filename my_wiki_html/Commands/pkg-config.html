@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>pkg-config</title>
+    <link rel="Stylesheet" type="text/css" href="../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../about.html">About</a>
+    <a href="../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+<div id="pkg-config"><h1 id="pkg-config">pkg-config</h1></div>
+
+<p>
+<code>pkg-config</code>是一个用于获取下载到系统中的库的信息，通常用于编译和链接一个或者多个库。下面是一个典型的例子。
+</p>
+<pre shell>
+gcc program.c `pkg-config --cflags --libs opencv`
+</pre>
+
+
+<p>
+<code>pkg-config</code>从特殊的元数据文件中读取库的信息。这些文件被命名为<code>包名.pc</code>，例如<code>opencv.pc</code>。在大多数的系统中，其搜索文件的路径如下:
+</p>
+<ul>
+<li>
+<code>pkg-config</code>在路径<code>/usr/lib/pkgconfig</code>、<code>/usr/share/pkgconfig</code>、<code>/usr/local/lib/pkgconfig</code>、<code>/usr/local/share/pkgconfig</code>中搜索这些文件。
+
+<li>
+另外其也会在<code>PKG_CONFIG_PATH</code>环境变量所指定的地址中寻找。
+
+</ul>
+
+
+<p>
+<code>pkg-config</code>支持以下这些可选命令：
+</p>
+<ul>
+<li>
+<code>--modversion</code> ：输出库的版本。
+
+<li>
+<code>--cflags</code> ：输出由<code>-I</code>指定的头文件的位置。
+
+<li>
+<code>--libs</code> ：输出由<code>-L</code>指定的库的位置和由<code>-l</code>指定的库的名字。
+
+<li>
+<code>--libs-only-L</code> ：只输出由<code>-L</code>指定的库的位置。
+
+<li>
+<code>--libs-only-l</code> ：只输出由<code>-l</code>指定的库的名字
+
+<li>
+<code>--list-all</code> ：列出所有在<code>pkg-config</code>路径中找到的库。
+
+<li>
+<code>--static</code> ：列出使用与静态链接的库。
+
+</ul>
+
+
+<hr />
+<div id="pkg-config-参考"><h2 id="参考">参考</h2></div>
+<p>
+<a href="http:&#47;&#47;blog.csdn.net&#47;luotuo44&#47;article&#47;details&#47;24836901">pkg-config的一些用法,如何编写.pc文件</a>
+</p>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

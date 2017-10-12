@@ -1,0 +1,21 @@
+
+= 数字图像处理中的数学工具 =
+
+
+== 数组运算和矩阵运算(Array versus Matrix Operations) ==
+二维数组的加、减、乘、除都是对应位置的元素做运算
+== 线性和非线性运算(Linear versus Nonlinear Operations) ==
+== 算术运算(Arithmetic Operations) ==
+算术操作就是数组运算，两张图片的算术运算就是对应位置的元素做运算，所以要求两者的大小都是相同的m*n
+
+* 加法的例子
+	- [[http://www.cnblogs.com/lianera/p/5032631.html|多图片平均降噪]]
+
+* 减法的例子
+
+* 乘法和除法的例子
+== 集合和逻辑运算(Set and Logical Operations) ==
+== 空间操作(Spatial Operations) ==
+== 向量和矩阵运算(Vector and Matrix Operations) ==
+== 图像变换(Image Transforms) ==
+== 概率方法(Probabilistic Methods) ==

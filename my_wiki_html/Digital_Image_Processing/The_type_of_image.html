@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>图像的类型</title>
+    <link rel="Stylesheet" type="text/css" href="../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../about.html">About</a>
+    <a href="../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+
+<div id="图像的类型"><h1 id="图像的类型">图像的类型</h1></div>
+
+<ul>
+<li>
+二值图像
+
+<ul>
+<li>
+图像矩阵的每个像素只取值0或者1，0代表黑色，1代表白色。
+
+</ul>
+<li>
+灰度图像
+
+<ul>
+<li>
+图像矩阵的每个元素的取值范围为[0,255]，因此其数据类型一般为8位无符号整形。
+
+<li>
+也叫做256灰度图像，0代表纯黑色，1代表纯白色，中间的数字代表黑色到白色的过渡色。
+
+<li>
+灰度图像也可以用double类型表示，像素的取值访问为[0,1]，0代表黑色，1代表白色，[0,1]之间的小数表示不同的灰度等级。
+
+</ul>
+<li>
+真彩色RGB图像
+
+<ul>
+<li>
+RGB图像矩阵的每个元素用R、G、B三个分量来表示，因为每个分量的取值范围为[0,255]，要用8位，所以每个像素要用3个字节来表示。
+
+</ul>
+<li>
+索引图像
+
+<ul>
+<li>
+例如有一个200*200的图像矩阵，颜色数为16色，如果每个像素用R、G、B三个分量来表示，那么需要<code>200*200*3</code>个字节。
+
+<li>
+我们可以建立一个索引表，表中的每行记录一种颜色的R、B、B值。那么图像矩阵的每个元素只要指向索引表的某个位置就行了。
+
+<li>
+索引表的大小为16，所以矩阵的每个元素只要用4bit的就能指向索引表的一种颜色
+
+<li>
+所以整个图像的大小为<code>200*200*0.5</code>个字节，加上索引表<code>16*3</code>个字节。
+
+<li>
+<code>(200*200*0.5 + 16*3)/(200*200*3) = 1/6</code>，节约了很多的空间。
+
+</ul>
+</ul>
+
+
+<ul>
+<li>
+图像深度
+
+<ul>
+<li>
+图像深度是指存储每个像素所用的位数。
+
+<li>
+图像深度确定彩色图像每个像素可能有的颜色数。
+
+<li>
+图像深度确定灰度图像每个像素可能有的灰度级数。
+<pre>
+图像深度是指存储每个像素所用的位数，也用于量度图像的色彩分辨率。图像深度确定彩色图像的每个像素可能有的颜色[1]  数，或者确定灰度图像的每个像素可能有的灰度级数.它决定了彩色图像中可出现的最多颜色数，或灰度图像中的最大灰度等级。比如一幅单色图像,若每个像素有8位[2]  ，则最大灰度数目为2的8次方,即256。一幅彩色图像RGB3个分量的像素位数分别为4,4,2,则最大颜色数目为2的4+4+2次方，即1024,就是说像素的深度为10位，每个像素可以是1024种颜色中的一种。
+例如：一幅画的尺寸是1024*768，深度为16，则它的数据量为1.5M。
+计算如下：1024*768*16bit(位)=(1024*768*16)/8Byte(字节)=[(1024*768*16)/8]/1024KB=1536KB={[(1024*768*16)/8]/1024}/1024MB=1.5MB。
+</pre>
+
+</ul>
+</ul>
+
+
+<hr />
+<div id="图像的类型-参考"><h2 id="参考">参考</h2></div>
+<ol>
+<li>
+<a href="http:&#47;&#47;www.cnblogs.com&#47;theBoyisNone&#47;p&#47;5656172.html">图像的四种类型</a>
+
+</ol>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

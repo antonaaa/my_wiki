@@ -1,0 +1,29 @@
+%title Optimization
+= Optimization =
+
+
+== Preparatory Knowledge ==
+1. 迭代停止准则
+== Linear Programming ==
+== Unconstrained Optimization Method ==
+1. [[One_Dimensional_Search|One Dimensional Search]]
+	- [[Golden_Section_Method|Golden Section Method]]
+	- [[Parabolic_Interpolation|Parabolic Interpolation]]
+	- [[Inexact_One_Dimensional_Search|Inexact One Dimensional Search]]
+	- Determine the search interval
+2. [[Gradient_Descent|Gradient Descent]]  
+3. [[Newton_Method|Newton Method]]
+4. [[Conjugate_Direction_Method_and_Conjugate_Gradient_Method|Conjugate Direction Method and Conjugate Gradient Method]]
+5. [[Quasi_Newton_Method|Quasi Newton Method]]
+== Constrained Optimization Method ==
+
+
+
+
+
+
+
+
+
+=== 参考 ===
+* [[https://www.yangzhou301.com/2016/03/14/826442654/|凸函数和矩阵半正定]]

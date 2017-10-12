@@ -1,0 +1,37 @@
+%title TheWaySoFar's Wiki
+= TheWaySoFar's Wiki =
+
+== Mathematics == 
+* [[Mathematics/Caculus|Caculus]]
+* [[Mathematics/Linear_Algebra/index|Linear Algebra]]
+* [[Mathematics/Optimization/index|Optimization]]
+* [[http://www.matongxue.com/madocs/8.html#/madoc|如何通俗地解释欧拉公式（e^θi=cosθ + isinθ)]]
+* [[https://www.zhihu.com/question/22443712/answer/113884840|虚数i是真实存在的吗]]
+
+
+== Programming ==
+* [[Python/index|Python]]
+* [[C_CPP/index|C & C++]]
+
+== Tools ==
+* [[Vim/index|Vim]]
+* [[Git/index|Git]]
+* [[Commands/index|Commands]]
+
+== Image and Graphics ==
+* [[Digital_Image_Processing/index|Digital Image Processing]]
+* [[OpenCV/index|OpenCV]]
+
+== Data Structure ==
+* [[ACM/index|ACM]]
+
+
+== Others ==
+* [[Others/reinstall_the_system|Reinstall The System]]
+* [[Others/what_vimwiki_can_do|What Vimwiki Can Do]]
+
+== The Fucking English ==
+* [[English/index|文法俱乐部阅读笔记]]
+
+
+

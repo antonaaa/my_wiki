@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Histogram Equalization</title>
+    <link rel="Stylesheet" type="text/css" href="../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../about.html">About</a>
+    <a href="../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+<div id="Histogram Equalization"><h1 id="Histogram Equalization">Histogram Equalization</h1></div>
+
+<div id="Histogram Equalization-随机变量函数的概率密度函数"><h2 id="随机变量函数的概率密度函数">随机变量函数的概率密度函数</h2></div>
+<blockquote>
+对于任意的严格单调函数\(g(x)\)，随机变量\(X\)和随机变量\(Y=g(X)\)的概率密度函数之间有什么关系为：\(f_Y(y) = f_X(g^{-1}(y)) \left| \frac{dg^{-1}(y)}{dy} \right|\)，为什么呢？？？
+</blockquote>
+	
+<p>
+如果\(X\)是一个随机变量，函数\(Y = g(X)\)是一个严格单调函数（保证了一一映射）。
+</p>
+
+<p>
+由于随机变量的函数也是随机变量，所以\(Y\)也是一个随机变量，那么随机变量\(X\)的概率密度函数和随机变量\(Y\)的概率密度函数之间有什么关系呢？
+</p>
+
+
+
+<div id="Histogram Equalization-随机变量函数的概率密度函数-如果$g(x)$是严格单调递增函数"><h3 id="如果$g(x)$是严格单调递增函数">如果\(g(x)\)是严格单调递增函数</h3></div>
+<ol>
+<li>
+\(F_Y(y) = P\{Y \le y\} = P\{g(X) \le y\} = P\{X \le g^{-1}(y)\} = F_X(g^{-1}(y))\)
+
+<ul>
+<li>
+简单来说就是：\(P\{Y \le y\} = P\{ X \le g^{-1}(y)\}\)，其中\(x = g^{-1}(y)\)是\(y = g(x)\)的反函数。
+
+<li>
+意思就是说：映射之后集合\(Y\)中有多少元素<code>小于等于</code>\(y\)，等价于经过\(Y = g(X)\)映射之前，集合\(X\)中有多少个元素<code>小于等于</code>\(x = g^{-1}(y)\)
+
+<ul>
+<li>
+因为映射\(Y = g(X)\)是单调递增函数
+
+<li>
+单调递增函数是：\(x_1 &lt; x_2\)，那么有\(g(x_1) &lt; g(x_2)\)
+
+</ul>
+<li>
+举个例子，\(\{6, 7, 8, 9, 10\} = g(\{1, 2, 3, 4, 5\})\)，那么\(P\{Y \le 8\} = P\{X \le 3\}\)，其中\(x = g^{-1}(y) = g^{-1}(8) = 3\)
+
+<li>
+上面的例子是离散的情况下，连续的情况自行脑补。
+
+</ul>
+<li>
+两边同时对\(y\)求导后，得到\(\ f_Y(y) = f_X(g^{-1}(y)) \frac{dg^{-1}(y)}{dy}\)
+
+</ol>
+
+<div id="Histogram Equalization-随机变量函数的概率密度函数-如果$g(x)$是严格单调递减函数"><h3 id="如果$g(x)$是严格单调递减函数">如果\(g(x)\)是严格单调递减函数</h3></div>
+<ol>
+<li>
+\(F_Y(y) = P\{Y \le y\} = P\{g(X) \le y\} = P\{X \ge g^{-1}(y)\} = 1 - P\{X \lt g^{-1}(y)\} = 1 - F_X(g^{-1}(y))\)
+
+<ul>
+<li>
+简单来说就是：\(P\{Y \le y\} = 1- P\{ X \ge g^{-1}(y)\}\)
+
+<li>
+意思就是说：映射之后集合\(Y\)中有多少元素<code>小于等于</code>\(y\)，等价于经过\(Y = g(X)\)映射之前，集合\(X\)中有多少个元素<code>大于等于</code>\(x = g^{-1}(y)\)
+
+<ul>
+<li>
+因为映射\(Y = g(X)\)是单调递减函数
+
+<li>
+单调递增函数是：\(x_1 &lt; x_2\)，那么有\(g(x_1) &gt; g(x_2)\)
+
+</ul>
+<li>
+举个例子，\(\{10, 9, 8, 7, 6\} = g(\{1, 2, 3, 4, 5\})\)，
+	那么\(\frac{\left|\{6, 7, 8\} \right|}{\left|\{1,2,3,4,5\}\right|} = P\{Y \le 8\} = P\{X \ge 3\} = \frac{\left|\{5,4,3\}\right|}{\left|\{1,2,3,4,5\}\right|} = 1 - P\{X \lt 3\} = 1 - \frac{\left|\{1,2\}\right|}{\left|\{1,2,3,4,5\}\right|} \)
+
+<li>
+上面的例子是离散的情况下，连续的情况自行脑补。
+
+</ul>
+<li>
+两边同时对\(y\)求导后得到\(\ f_Y(y) = - f_X(g^{-1}(y)) \frac{dg^{-1}(y)}{dy} = f_X(g^{-1}(y)) \left| \frac{dg^{-1}(y)}{dy} \right|\)
+
+<ul>
+<li>
+因为\(g(x)\)是递减函数，所以\(g^{-1}(y)\)也是递减函数，所以其导数是负的
+
+<li>
+所以加上绝对值与前面的负号正好抵消
+
+</ul>
+</ol>
+
+<hr />
+<p>
+综合上述的两种情况，对于任意的严格单调函数\(g(x)\)，随机变量\(X\)和随机变量\(Y=g(X)\)的PDF之关系为：\(f_Y(y) = f_X(g^{-1}(y)) \left| \frac{dg^{-1}(y)}{dx} \right|\)
+</p>
+
+
+<p>
+参考自：<a href="https:&#47;&#47;www.zhihu.com&#47;question&#47;37594200&#47;answer&#47;170371569">请问两个一一映射的变量的概率密度函数有什么关系，怎么证明？</a>
+</p>
+
+<div id="Histogram Equalization-随机变量函数的概率密度函数-举个例子"><h3 id="举个例子">举个例子</h3></div>
+<p>
+设随机变量\(X\)的概率密度函数为\(f_X(X)\)，令映射函数为单调函数\(Y = X^2\)，该函数在区间\([0, +\infty]\)上严格单调递增。那么如何求随机变量\(Y\)的概率密度函数呢？？？
+</p>
+
+<ul>
+<li>
+由于\(y = x^2\)，所以其反函数为：\(g^{-1}(y) = y^{\frac{1}{2}}\)
+
+<li>
+求导之后得\(\frac{dg^{-1}(y)}{dx} = \frac{1}{2} y^{- \frac{1}{2}}\)
+
+</ul>
+
+<p>
+根据公式\(f_Y(y) = f_X(g^{-1}(y)) \left| \frac{dg^{-1}(y)}{dy} \right|\)，那么有
+</p>
+<ul>
+<li>
+\(f_Y(y) = f_X(g^{-1}(y)) \left| \frac{dg^{-1}(y)}{dy} \right| = f_X(y^{\frac{1}{2}}) \frac{1}{2} y^{- \frac{1}{2}}\)
+
+</ul>
+
+<p>
+假设随机变量\(X\)服从区间\([0,2]\)上的均匀分布
+\begin{cases}
+\frac{1}{2},0 \le x \le 2 \\
+0, other
+\end{cases}
+</p>
+
+
+<p>
+那么随机变量\(Y\)的概率密度函数为
+\begin{cases}
+\frac{1}{4} y^{- \frac{1}{2}},0 \le y \le 4 \\
+0, other
+\end{cases}
+</p>
+
+<hr />
+<p>
+下面来验证一下求得对不对
+</p>
+
+<ul>
+<li>
+对于\(x = 1\)，那么经过映射之后，\(y = 1\)，所以应该有\(F_X(1) = F_Y(1)\)。
+
+<ul>
+<li>
+\(\int _{0}^{1} f_X(x) dx = \int _{0}^{1} \frac{1}{2} dx = [\frac{1}{2}x]_{0}^{1} = \frac{1}{2}\)
+
+<li>
+\(\int _{0}^{1} f_Y(y) dy = \int _{0}^{1} \frac{1}{4} y^{-\frac{1}{2}} dx = [\frac{1}{2}y^{\frac{1}{2}}]_{0}^{1} = \frac{1}{2}\)
+
+</ul>
+<li>
+对于\(x = \sqrt 2\)，那么经过映射之后，\(y = 2\)，所以应该有\(F_X(\sqrt 2) = F_Y(2)\)。
+
+<ul>
+<li>
+\(\int _{0}^{\sqrt 2} f_X(x) dx = \int _{0}^{\sqrt 2} \frac{1}{2} dx = [\frac{1}{2}x]_{0}^{\sqrt 2} = \frac{1}{2} \sqrt 2\)
+
+<li>
+\(\int _{0}^{2} f_Y(y) dy = \int _{0}^{2} \frac{1}{4} y^{-\frac{1}{2}} dx = [\frac{1}{2}y^{\frac{1}{2}}]_{0}^{2} = \frac{1}{2} \sqrt 2\)
+
+</ul>
+<li>
+对于\(x = 2\)，那么经过映射之后，\(y = 4\)，所以应该有\(F_X(2) = F_Y(4)\)。
+
+<ul>
+<li>
+\(\int _{0}^{2} f_X(x) dx = \int _{0}^{2} \frac{1}{2} dx = [\frac{1}{2}x]_{0}^{2} = 1\)
+
+<li>
+\(\int _{0}^{4} f_Y(y) dy = \int _{0}^{4} \frac{1}{4} y^{-\frac{1}{2}} dx = [\frac{1}{2}y^{\frac{1}{2}}]_{0}^{4} = 1\)
+
+</ul>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="Histogram Equalization-随机变量函数的概率密度函数-进一步的思考"><h3 id="进一步的思考">进一步的思考</h3></div>
+<p>
+函数\(y = g(x)\)和函数\(x = g^{-1}(y)\)是互为反函数的，也就是\(y\)是\(x\)的函数，\(x\)也是\(y\)的函数，关键看怎么用：
+</p>
+<ul>
+<li>
+如果把\(x = g^{-1}(y)\)看做是反函数，那么有
+
+<ul>
+<li>
+\(f_Y(y) = f_X(x) \left|\frac{dx}{dy} \right|\)
+
+<li>
+此时，上式中的\(x\)都是\(x = g^{-1}(y)\)，所以\(\frac{dx}{dy} = \frac{dg^{-1}(y)}{dy}\)
+
+</ul>
+<li>
+如果把\(y = g(x)\)看做是反函数，那么有
+
+<ul>
+<li>
+\(f_X(x) = f_Y(y) \left|\frac{dy}{dx} \right|\)
+
+<li>
+此时，上式中的\(y\)都是\(y = g(x)\)，所以\(\frac{dy}{dx} = \frac{dg(x)}{dx}\)
+
+</ul>
+</ul>
+
+
+<p>
+下面在已知\(y = x^2\)、\(x = y^{\frac{1}{2}}\)和\(f_X(x) = \frac{1}{2}\)服从\([0,2]\)上的均匀分布的基础上，分别用上面所说的两种方式进行\(f_Y(y)\)的推导
+<hr />
+</p>
+<ul>
+<li>
+ \(f_Y(y) = f_X(x) \left|\frac{dx}{dy} \right| = f_X(y^\frac{1}{2}) \frac{1}{2} y^{-\frac{1}{2}} = \frac{1}{4}y^{-\frac{1}{2}}\)
+
+<li>
+ \(f_X(x) = f_Y(y) \left|\frac{dy}{dx} \right| = f_Y(y)2x\)，请记住，不管是哪种方式，要推导的都是\(Y\)的概率密度函数\(f_Y(y)\)，所以推导中的\(x\)都要用\(y\)来代替
+
+<ul>
+<li>
+\(f_X(y^{\frac{1}{2}}) = f_Y(y) 2 y^{\frac{1}{2}}\)
+
+<li>
+\(f_Y(y) = f_X(y^{\frac{1}{2}}) \frac{1}{2} y^{-\frac{1}{2}} = \frac{1}{4}y^{-\frac{1}{2}}\)
+
+</ul>
+</ul>
+
+
+<div id="Histogram Equalization-直方图均值化"><h2 id="直方图均值化">直方图均值化</h2></div>
+<blockquote>
+如果一张图片太亮或者太暗了，那么其灰度值的直方图分布会偏右（太亮）或者偏左（太暗），直方图均值化可以帮助我们延展这个分布，这样可以更好地利用0~255的整个灰度值范围，而不仅仅是使用较亮或者较暗部分的值。 这样做的结果是增大了对比度，利用了更多的灰度值来表示图像，那么更容易观察到图像的某些细节。
+</blockquote>
+
+<p>
+我们需要找到一个变换\(Y = T(X)\)，使得：
+</p>
+<ol>
+<li>
+\(T(X)\)在区间\([0, L - 1]\)上的单调递增函数
+
+<li>
+当\(0 \le x \le L - 1\)时，\(0 \le T(x) \le L - 1\)
+
+</ol>
+<div id="Histogram Equalization-直方图均值化-灰度值连续的情况"><h3 id="灰度值连续的情况">灰度值连续的情况</h3></div>
+<p>
+要求一个变换\(Y = T(X)\)，使得经过变换之后的灰度值\(Y\)的概率密度函数是\([0, L - 1]\)上的均匀分布。
+</p>
+
+<p>
+而灰度值\(X\)的概率密度函数也是已知的，所以是在已知两个概率密度函数的情况下，求这个变换\(Y = T(X)\)
+</p>
+
+<p>
+由上面的推导可知，有两种推导方式
+</p>
+<ol>
+<li>
+\(f_Y(y) = f_X(x)\left| \frac{dx}{dy} \right| = f_X(x) \left| \frac{dT^{-1}(y)}{dy} \right|\)
+
+<ul>
+<li>
+我们要求的是变换\(Y = T(X)\)，而不是其反变换，所以不考虑这种推导方式
+
+</ul>
+<li>
+\(f_X(x) = f_Y(y)\left| \frac{dy}{dx} \right| = f_Y(y) \left| \frac{dT(x)}{dx} \right|\)
+
+<ul>
+<li>
+已知\(f_Y(y)\)是均匀分布，所以有\(f_X(x) = \frac{1}{L - 1} \left| \frac{dT(x)}{dx} \right|\)
+
+<li>
+\(f_X(x) \left| \frac{dx}{dT(x)} \right| = \frac{1}{L - 1}\)
+
+<li>
+也就说，\(\left| \frac{dx}{dT(x)} \right|\)应该等于\(\left| \frac{1}{(L-1)f_X(x)} \right|\)，\(f_X(x) \left| \frac{dx}{dT(x)} \right| = f_X(x) \left| \frac{1}{(L-1)f_X(x)} \right|= \frac{1}{L - 1}\)，因为概率密度函数是非负的，所以可以去掉绝对值符号
+
+<li>
+\(\frac{dT(x)}{dx} = (L-1)f_X(x)\)，由微积分基本定理可知\(T(x) = (L-1)\int_0^x f_X(w) dw\)
+
+</ul>
+</ol>
+<blockquote>
+所以直方图均值化的灰度值转换公式为\(y = T(x) = (L-1)\int_0^x f_X(w) dw\)，这个公式的意义是如果一个灰度值的累积概率密度\(\int_0^x f_X(w) dw\)越大，那么其转换之后的灰度值也应该越靠后，因为乘以了\(L-1\)
+</blockquote>
+<div id="Histogram Equalization-直方图均值化-灰度值离散的情况"><h3 id="灰度值离散的情况">灰度值离散的情况</h3></div>
+<p>
+图片的灰度值是离散的，所以需要把上面积分的形式，改为离散求和的形式
+</p>
+
+<p>
+一幅图像中，灰度值\(x_k\)出现的概率为\(p_X(x_k) = \frac{n_k}{MN}\)，其中\(MN\)是图像中的像素总数，\(n_k\)是灰度为\(x_k\)的像素个数
+</p>
+<blockquote>
+与\(x_k\)相对的\(p_X(x_k)\)图形通常称为<code>直方图</code>
+</blockquote>
+<p>
+\(y_k = T(x_k) = (L - 1)\sum_{j=0}^{k}p_X(x_j) = \frac{L-1}{MN} \sum_{j=0}^{k} n_j\)
+</p>
+<blockquote>
+所以离散情况下的公式为：\(y_k = T(x_k) = \frac{L-1}{MN} \sum_{j=0}^{k} n_j, \;\;\; k = 0,1,\dots,L-1\)
+</blockquote>
+
+
+<div id="Histogram Equalization-直方图均值化-举个例子"><h3 id="举个例子">举个例子</h3></div>
+
+
+<p>
+<a href="..&#47;..&#47;my_wiki&#47;Digital_Image_Processing&#47;resources&#47;直方图均值化例子.png"><img src="../../my_wiki/Digital_Image_Processing/resources/直方图均值化例子.png" alt="直方图均值化例子图片" style="width:800px; height:500px;" /></a>
+</p>
+
+<p>
+右边的4条曲线表示左边从上至下的4幅图片的转换函数
+</p>
+<ol>
+<li>
+第1幅图片太暗了，所以其转换函数的定义域很靠左
+
+<li>
+第2幅图片太亮了，所以其转换函数的定义域很靠右
+
+<li>
+第3幅图片太模糊了，像素值都集中在中间
+
+<li>
+第4幅图片本身就很好，所以其转换函数的斜率接近1，几乎就是一个恒等变换
+
+</ol>
+
+<p>
+可以看到转换函数的值域都是[0,255]
+</p>
+
+<p>
+这几个转换的值域都是[0,255]，但不是所有的变换都是，比如如果输入图像的灰度值为0的像素很多，那么求出来的变换的值域就不是[0,255]
+</p>
+
+
+
+<div id="Histogram Equalization-参考"><h2 id="参考">参考</h2></div>
+<ol>
+<li>
+<a href="https:&#47;&#47;www.zhihu.com&#47;question&#47;37594200&#47;answer&#47;170371569">请问两个一一映射的变量的概率密度函数有什么关系，怎么证明？</a>
+
+<li>
+<a href="http:&#47;&#47;blog.csdn.net&#47;xiajun07061225&#47;article&#47;details&#47;6910129">【数字图像处理】直方图均衡化详解及编程实现</a>
+
+</ol>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

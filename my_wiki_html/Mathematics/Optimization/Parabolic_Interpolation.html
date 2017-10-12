@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Parabolic Interpolation</title>
+    <link rel="Stylesheet" type="text/css" href="../../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../../about.html">About</a>
+    <a href="../../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+<div id="Parabolic Interpolation"><h1 id="Parabolic Interpolation">Parabolic Interpolation</h1></div>
+
+<div id="Parabolic Interpolation-抛物线插值法的定义"><h2 id="抛物线插值法的定义">抛物线插值法的定义</h2></div>
+<blockquote>
+抛物线插值法适用于<code>连续</code>的单谷函数求极小点的问题
+</blockquote>
+	
+<p>
+在黄金分割法中，除了比较函数值大小之外，并未用到函数本身的性质。抛物线插值法可以利用现有的信息来加速迭代。
+</p>
+
+
+<ol>
+<li>
+函数\(\phi(t)\)在区间\([t_1, t_3]\)上连续，在区间上取一点\(t_2\)。
+
+<li>
+记\(\phi_1 = \phi(t_1)\)，\(\phi_2=\phi(t_2)\)，\(\phi_3 = \phi(t_3)\)。
+
+<li>
+因为\(\phi(t)\)是单谷函数，所以有\(\phi_1 \ge \phi_2 \le \phi_3\)。
+
+<ul>
+<li>
+若两等号不同时成立，也即三点不共线，那么可以过\((t_1, \phi_1)\)，\((t_2, \phi_2)\)，\((t_3, \phi_3)\)三点做抛物线插值。
+
+<li>
+设其方程是\(Q(t) = pt^2 + qt + r\)。
+
+<li>
+\(Q(t)\)其实是过三点，在区间\([t_1, t_2]\)上对\(\phi(t)\)的一个曲线拟合。
+
+</ul>
+<li>
+\(Q(t)\)是一个二次函数，所以可以求其极小值点\(t_4\)，利用其将区间缩小。
+
+<li>
+继续在缩小之后的区间上做抛物线插值，如此迭代下去，从而将区间缩小到足够小。
+
+</ol>
+
+
+<div id="Parabolic Interpolation-求解抛物线插值方程"><h2 id="求解抛物线插值方程">求解抛物线插值方程</h2></div>
+
+<p>
+令\(Q^,(t)=2pt + q = 0\)，解出驻点为\(t_4 = - \frac{q}{2p}\)
+</p>
+
+<p>
+根据方程组
+\begin{cases}
+pt_1^2 + qt_1 + r = \phi_1 \\
+pt_2^2 + qt_2 + r = \phi_2 \\
+pt_3^2 + qt_3 + r = \phi_3 \\
+\end{cases}
+</p>
+
+<p>
+解出
+</p>
+
+<p>
+\(p = - \frac{(t2 - t3)\phi1 + (t_3 - t_1)\phi_2 + (t_1 - t_2)\phi_3}{(t_1 - t_2)(t_2 - t_3)(t_3 - t_1)}\)
+</p>
+
+<p>
+\(q = - \frac{(t_2^2 - t_3^2)\phi_1 + (t_3^2 - t_1^2)\phi_2 + (t_1^2 - t_2^2)\phi_3}{(t_1 - t_2)(t_2 - t_3)(t_3 - t_1)}\)
+</p>
+	
+<p>
+从而求得
+</p>
+
+<p>
+\(t_4 = \frac{(t_2^2 - t_3^2)\phi_1 + (t_3^2 - t_1^2)\phi_2 + (t_1^2 - t_2^2)\phi_3}{2[(t_2 - t_3)\phi1 + (t_3 - t_1)\phi_2 + (t_1 - t_2)\phi_3]}\)
+</p>
+
+<p>
+这个公式只有当\((t_1, \phi_1)\)，\((t_2, \phi_2)\)，\((t_3, \phi_3)\)三点不共线时，才能够使用。
+</p>
+
+<p>
+而且\(t_4\)点也必定落在区间\([t_1, t_3]\)内。因为\(t_4\)是抛物线\(Q(t)\)的极小值点。
+</p>
+
+
+<div id="Parabolic Interpolation-算法流程"><h2 id="算法流程">算法流程</h2></div>
+
+<p>
+其实抛物线插值法和三分法形式上没有区别，都是在区间\([t_1, t_3]\)取两点，然后将区间分为三个部分，然后根据两点处的函数值来缩小区间。
+</p>
+
+<p>
+只不过抛物线插值法利用了函数信息求出了其中的一个点。
+</p>
+
+<p>
+<a href="..&#47;..&#47;..&#47;my_wiki&#47;Mathematics&#47;Optimization&#47;resources&#47;抛物线插值法流程图.png"><img src="../../../my_wiki/Mathematics/Optimization/resources/抛物线插值法流程图.png" alt="函数图像" style="width:600px; height:600px;" /></a>
+</p>
+
+<p>
+其中公式(3.14)就是\(t_4 = \frac{(t_2^2 - t_3^2)\phi_1 + (t_3^2 - t_1^2)\phi_2 + (t_1^2 - t_2^2)\phi_3}{2[(t_2 - t_3)\phi1 + (t_3 - t_1)\phi_2 + (t_1 - t_2)\phi_3]}\)
+</p>
+
+<ol>
+<li>
+在区间\([t_1, t_2]\)中求得\(t_3\)点，一般是\(t_3 = \frac{t_1 + t_2}{2}\)，并计算函数值\(\phi_1, \phi_2, \phi_3\)。
+
+<li>
+由三点根据公式算出其分母\(M\)，若\(M = 0\)，说明三点共线，无法进行抛物线插值。
+
+<ul>
+<li>
+Q1处理方法：设置多种\(t_3\)点的取样方法，一种不行就换另一种。比如\(\frac1 2\)，\(\frac 1 3\)，\(\frac 1 4\)等
+
+<li>
+如果多次取样之后还是不行，也即该函数在多处的函数值相同，很大概率说明该函数在该区间内是一条直线。
+
+<li>
+针对上述情况，该如何处理呢？
+
+</ul>
+<li>
+根据公式计算出\(t_4\)，及其函数值\(\phi_4\)。
+
+<li>
+然后便是压缩空间的过程了，若\(t_2 == t_4\)，说明区间中只有一个采样点，无法比较函数然后压缩区间。
+
+<ul>
+<li>
+Q2处理方法：对其中的一个点进行扰动，使它们不相等就好了。
+
+</ul>
+</ol>
+
+
+
+<div id="Parabolic Interpolation-算法代码"><h2 id="算法代码">算法代码</h2></div>
+<p>
+代码有问题，应该把\(\phi_2 == \phi_4\)的情况单独写出来，而不是合并；黄金分割法合并是为了重复利用已经有的点。
+</p>
+<pre cpp>
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#include &lt;iostream&gt;
+using namespace std;
+
+int dcmp(double x, double y, double eps)
+{
+	if(fabs(x - y) &lt; eps)
+		return 1;
+	else
+		return -1;
+}
+//求分子
+double numerator(double (*f)(double), double t1, double t2, double t3, double f1, double f2, double f3)
+{
+	double res = (t2 * t2 - t3 * t3) * f1 + (t3 * t3 - t1 * t1) * f2 + (t1 * t1 - t2 * t2) * f3;
+	return res;
+}
+
+//求分母
+double denominator(double (*f)(double), double t1, double t2, double t3, double f1, double f2, double f3)
+{
+	double res = (t2 - t3) * f1 + (t3 - t1) * f2 + (t1 - t2) * f3;
+	res *= 2;
+	return res;
+}
+//缩减区间，并更新相应点的函数值
+void reduce1(double (*f)(double), double&amp; l, double&amp; t2, double&amp; t4, double&amp; r, double&amp; f1, double&amp; f2, double&amp; f4, double&amp; f3)
+{
+	if(f2 &lt; f4)
+	{
+		r = t4;
+		f3 = f4;
+	}
+	else
+	{
+		l = t2;
+		t2 = t4;
+		f1 = f2;
+		f2 = f4;
+	}
+}
+void reduce2(double (*f)(double), double&amp; l, double&amp; t4, double&amp; t2, double&amp; r, double&amp; f1, double&amp; f4, double&amp; f2, double&amp; f3)
+{
+	if(f4 &lt; f2)
+	{
+		r = t2;
+		t2 = t4;
+		f3 = f2;
+		f2 = f4;
+	}
+	else
+	{
+		l = t4;
+		f1 = f4;
+	}
+}
+double parabolic_interpolation(double (*f)(double), double l, double r, double eps)
+{
+	//有点问题是，不同地方用到的eps到底是该一样，还是不同呢，这个没有仔细思考
+	double t2, t4;
+	t2 = (r + l) / 2;
+	double f1, f2, f3, f4;
+	f1 = f(l);
+	f2 = f(t2);
+	f3 = f(r);
+	while(dcmp(l, r, eps) != 1)
+	{
+		double deno = denominator(f, l, t2, r, f1, f2, f3);
+		if(dcmp(deno, 0, 1e-15) == 1)
+		{
+			printf("%.15f error\n", deno);
+			break;
+		}
+		t4 = numerator(f, l, t2, r, f1, f2, f3) / deno;
+		f4 = f(t4);
+		if(t2 &lt; t4)
+		{
+			reduce1(f, l, t2, t4, r, f1, f2, f4, f3);
+		}
+		else
+		{
+			//t2 == t4, 进行扰动
+			if(dcmp(t2, t4, eps) == 1)
+			{
+				//这种扰动是随便想的，应该有更加好的扰动方法
+				t2 += (r - t2) / 2;
+				f2 = f(t2);
+			}
+			reduce2(f, l, t4, t2, r, f1, f4, f2, f3);
+		}
+	}
+	return (l + r) / 2;
+}
+// test function 1
+double f(double x)
+{
+	return x * x * x * 3 - 4 * x + 2;
+}
+// test function 2
+double f2(double x)
+{
+	return x * x * x * x * x * x - 11 * x * x * x + 17 * x * x - 7 * x + 1;
+}
+int main()
+{
+	/* double x = parabolic_interpolation(f, 0, 2, 1e-10); */
+	/* printf("%.10f %.10f\n", x, f(x)); */
+	double x = parabolic_interpolation(f2, 0, 1, 1e-5);
+	printf("%.10f %.10f\n", x, f2(x));
+	return 0;
+}
+</pre>
+<div id="Parabolic Interpolation-参考"><h2 id="参考">参考</h2></div>
+<ol>
+<li>
+<a href="https:&#47;&#47;wenku.baidu.com&#47;view&#47;071f8a807c1cfad6185fa768.html">第3章一维搜索方法</a>
+
+<li>
+<a href="https:&#47;&#47;wenku.baidu.com&#47;view&#47;329be90ecaaedd3383c4d38f.html">一维搜索方法</a>
+
+</ol>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

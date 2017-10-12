@@ -1,0 +1,2 @@
+%title Newton Method
+= Newton Method =

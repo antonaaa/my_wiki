@@ -1,0 +1,126 @@
+= 第一章 基本句型及补语 =
+
+
+1. S + V
+2. S + V + O
+3. S + V + C
+4. S + V + O + C
+5. S + V + O + O
+----
+S:主语
+V:动词
+O:宾语
+C:补语
+----
+
+	要了解补语，只需要研究那些解释为“是”的动词。基本句型分为五种，`是因为有五种特性不同的动词而造成的`。在所有的英语动词中，只有解释为“是”的动词是空的，完全没有意义。也只有这种动词才需要补语来补足句子的意思。
+	
+== S + V ==
+* John Smith died in World War Two.
+像`die`这种可以独立发生，不牵涉到别的人或物的动词，称为“不及物”动词。
+== S + V + O ==
+* John Smith killed three enemy soldiers.
+而`kill`这种动词，必须发生在另一个对象身上，称为“及物”动词。
+== S + V + C ==
+虽然`kill`需要宾语，但是如果去掉宾语，但是我们可以从动词中知道他做出了“杀”的动作，只不过不知道“杀”了什么东西而已。
+* John Smith was a soldier.
+* John Smith was courageous.
+反之，如果句子缺少了补语，就会变得完全没有意义。
+`一般来说，不论及物或者不及物，都要担任全句最主要内容的工作，只有解释为“是”的动词没有叙述能力`，只能扮演连接的的作用。
+* John Smith was.就没有任何意思。
+
+* Joon Smitth was courageour.约翰·史密斯很勇敢。
+* The soup is too hot.汤太烫了。
+如果`be`后面跟着的是形容词，那么动词“是”就会被丢掉。这充分说明了“是”这个动词是空的，完全没有意义，只是起到把前后两个部分连接起来，所以它又叫做“连缀动词”（Linking Verb）。
+=== 需要补语的动词有哪些 ===
+连缀动词除了最具有代表性的`be`动词之外，还有以下这些。
+
+* That dress `looks` pretty.（ 那件裙子很好看。）
+* The dog `seems` friendly.（ 那只狗好像很友善。）
+* His demands `appear` reasonable.（ 他的要求显得很合理。）
+* His trip `sounds` exciting.（ 他的旅行听起来很刺激。）
+* I `feel` sick.（ 我感觉不舒服。）
+* The drug `tastes` bitter.（ 药很苦。）
+* The story `proved` false.（ 故事经证实是捏造的。）
+* He `became` a teacher.（ 他当了老师。）
+* A nurse `makes` a good wife.（ 娶护士做太太真不错。）
+
+把以上句子里的动词全部换成`be`动词，这些句子的意思没有太大的改变。
+=== 如何区别S + V + O 和 S + V + C ===
+把以上句子里的动词全部换成`be`动词，如果句子的意思没有太大的改变， 那么就是S + V + C。
+
+== S + V + O + C ==
+了解主语补语的句子后，宾语补语的句型也容易理解了。主语补语的句型是用补语告诉读者主语是什么，中间用“是”为动词连接起来。
+S + V + O + C的句型则用补语告诉读者宾语是什么，中间暗示有一个“是”的关系存在。
+* I find the dress pretty.（ 我觉得这衣服很漂亮。）
+* The meat made the dog friendly.（ 肉让狗变得很友善。 )
+* They consider his demands reasonable.（ 他们认为他的要求是合理的。）
+* He found the trip exciting.(他觉得这次旅行很刺激。）
+* The food made me sick.(这种食物使我想吐。 )
+* I don't find the drug bitter.(我并不觉得药很苦。 )
+* I consider the story false.(我认为故事是捏造的。 )
+* His college training made him a teacher.(他的大学教育使他成为一名教师。）
+* Most people consider a nurse a good wife.(大多数的人认为护士会是称职的太太。 )
+
+以第一个句子为例子，宾语the dress和补语pretty之间虽然没有“是”字，可是带有这种暗示存在。如果加个be动词进去，就变成了主语补语的例子The dress is pretty。上面所有宾语补语的例子都可以用这种方法变成主语补语的例子。其实这也是区别S + V + O + O 和S + V + O + C句型的简便方法。
+
+
+== S + V + O + O ==
+* John's father gave him a dog. (约翰的父亲给他一只狗。）
+	- S + V + O + O
+* John's father called him a dog.(约翰的父亲骂他是狗。）
+	- S + V + O + C
+由于O + O和O + C都可能是名词加名词，所以要分析这两种句型的区别。
+
+* gave是意思是给某个某个东西，所以人就是him，东西就是a dog。O和O一般指的是两类东西，所以在O和O之间加be动词，句子的意思就会发生改变。
+* 而在S + V + O + C句型中，C是O的补充说明，所以在O和C之间加be动词，句子的意思不会发生改变。
+
+
+== Warning ==
+补语一般为`名词`或者`形容词`。
+因为主语和宾语都是名词，他们与补语之间用“是”连接，所以补语为`名词`或者`形容词`。
+
+
+
+
+== Tests == 
+1. The magician moved his fingers quickly.
+	- S + V + O + C
+2. The police found the letter missing.
+	- S + V + O + C
+3. The police found the missing letter.
+	- S + V + O
+4. He ordered himself a steak and a bottle of red wine.
+	- S + V + O + O
+5. Don't you like dancing?
+	- S + V + O
+6. The President has gone abroad on a visit.
+	- S + V
+7. That sounds like a good idea.
+	- S + V + C
+8. The box feels heavy.
+	- S + V + C
+9. He told his guests a dirty joke at the party.
+	- S + V + O + O
+10. The people elected Bill Clinton President.
+	- S + V + O + C
+11. The child asks her mother a million questions a day.
+	- S + V + O + O
+12. Monkeys love bananas.
+	- S + V + O
+13. You can leave the door open.
+	- S + V + O + C
+14. The company has gone bankrupt.
+	- S + V + C
+15. Why don't you answer me?
+	- S + V + O
+16. I consider you a member of the family.
+	- S + V + O + C
+17. It never rains in California.
+	- S + V
+18. You'll look better with these designer glasses on.
+	- S + V + C
+19. I can see better without these reading glasses.
+	- S + V
+20. Do you call me a liar?
+	- S + V + O + C

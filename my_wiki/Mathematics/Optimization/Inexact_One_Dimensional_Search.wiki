@@ -1,0 +1,83 @@
+%title Inexact One Dimensional Search
+ = Inexact One Dimensional Search =
+ 
+ 
+ == 不精确搜索的两个要求 ==
+ 不精确搜索是找到一个合适的步长$\alpha_k$，使得函数值有足够的下降。
+ 
+ 注意是足够的下降，
+ 
+ 下图， 函数在$x_k$处，沿着方向$p_k$是先下降后上升的。
+ 
+[[local:./resources/不精确搜索1.png|{{local:./resources/不精确搜索1.png|函数图像}}]]
+ 
+ 如果只是下降，那么只要取步长为很小的一个数，那么沿着该方向走一小步，函数值肯定是下降的
+ 所以还要要求步长不能太小。 （而且我还有一个猜想就是，如果步长太小，导致走完之后，下次求出来的下降方向还是该方向，那么还是要沿着太方向继续走，导致计算量浪费了）
+ 
+ 
+ 所以不精确搜索有两个要求。
+ 1. 函数值有足够的下降
+ 2. 步长不能太小
+
+----
+== Wolfe-Powell准则 ==
+1. $f(x_k + \alpha_k p_k) \le f(x_k) + \alpha_k \rho \nabla^T f(x_k) p_k$
+	- 也可以写成$f(x_{k+1}) \le f(x_k) + \alpha_k \rho \nabla^T f(x_k) p_k$
+	- 进而写成$f(x_k) - f(x_{k-1}) \ge - \alpha_k \rho \nabla^T f(x_k) p_k$
+2. $\nabla^T f(x_k + \alpha_k p_k) \ge \sigma \nabla^T f(x_k) p_k$
+
+=== 如何描述函数下降量满足要求 ===
+那么如何描述函数值的下降量是足够的呢？？?
+* 让用户传一个参数进来，下降量大于该参数就说明函数有足够的下降？？
+	- 不可行的， 离极值点远时，函数下降的量纲大
+	- 离极值点近时，函数下降的量纲下
+	- 所以不可能让用户来定义这个下降量参数的
+* 函数在远离极值点时，可能沿着下降方向走很小的步长，函数值就下降了10；而在靠近极值点时，走了相同的步长，函数值却下降了0.1
+	- 所以函数多大的下降量是足够的，可以用函数在该点的下降率（方向导数为负，称为下降率，我是这么认为的）来衡量。
+	- 而且随着步长的增大，函数的下降量也应该是增大的，所以初步可以认为函数的下降量应该是$\alpha_k \nabla^T f(x_k) p_k$，其中$\alpha_k$是步长，而$\nabla^T f(x_k) p_k$是下降率。
+	- 那么函数值的变化应该满足这种关系$f(x_k + \alpha_k p_k) \le f(x_k) + \alpha_k \nabla^T f(x_k) p_k$，因为下降量是负的， 所以是小于。
+	- 但是仔细想想，其实这个式子只有在步长很小的时候才能满足，因为随着步长的增大，下降率是变化的，如果下降率减小了，那么这个式子就不满足了，如下图：
+	- [[local:./resources/不精确搜索2.png|{{local:./resources/不精确搜索2.png|函数图像}}]]
+	- 所以可以在下降率之前乘以一个$[0,1]$之间的小数$\rho$，那么只要满足$f(x_k + \alpha_k p_k) \le f(x_k) + \rho \alpha_k \nabla^T f(x_k) p_k$，就说明函数值有足够的下降量了。
+	- 乘以一个系数$\rho$的含义是把$x_k$点的下降率认为小一些，目的是考虑到之后下降率可能变小，
+	- 下图描述了条件$f(x_k + \alpha_k p_k) \le f(x_k) + \rho \alpha_k \nabla^T f(x_k) p_k$允许的步长$\alpha_k$的取值范围是区间$[0, c]$。
+	[[local:./resources/不精确搜索3.png|{{local:./resources/不精确搜索3.png|函数图像}}]]
+
+
+
+=== 如何描述步长满足要求 ===
+那么如何描述步长不能够太小呢？？？
+* 为什么要避免步长太小的呢，前面说过了我的一个猜想，如果步长太小，导致走完之后，下次求出来的下降方向还是该方向，那么还是要沿着太方向继续走，导致计算量浪费了。
+* 那么换个角度来考虑就是，如果走了$\alpha_k$步后，沿着该方向的下降率足够大的话，那么就可以沿着该方向继续前进。
+* $\nabla^T f(x_k + \alpha_k p_k) p_k \ge \sigma \nabla^T f(x_k) p_k$，若步长满足该条件，那么有以下2种情况：
+	- 在点$x_k + \alpha_k  p_k$处，$p_k$是上升方向。
+	- 函数f在$x_k + \alpha_k  p_k$处沿方向$p_k$的下降率已经低于f在$x_k$方向的下降率的$\sigma$倍。
+	- 可以看出，如果步长太小的话，上面的2个种情况都不会成立的。
+	- $\sigma$越小，一维搜索越精精确，因为$\sigma$越小，说明只有$x_k + \alpha_k p_k$处沿方向$p_k$的下降率接近0时才会满足条件，也就是说$x_k + \alpha_k  p_k$差不多是该方向上的极值点了。
+	- 下图描述了条件$\nabla^T f(x_k + \alpha_k p_k) p_k \ge \sigma \nabla^T f(x_k) p_k$，允许的步长的取值范围是区间$[e, a]$。
+	- [[local:./resources/不精确搜索4.png|{{local:./resources/不精确搜索4.png|函数图像}}]]
+
+%% * 下降量和导数有关系，所以可以用导数来衡量这种下降量
+%% 	- $x_k$点的梯度为$\nabla f(x_k)$，下降率为$\nabla f(x_k) p_k < 0$，那么走步长为$\alpha_k$的函数下降量为$\alpha_k \nabla f(x_k) p_k$
+%% 	- 当然了，这种度量是不精确的度量，因为随着往$p_k$方向前进，可能下降率增大，即$\nabla f(x_k + \alpha_k p_k)(\alpha_k p_k) < \nabla f(x_k) p_k$，也可能下降率减小，即$\nabla f(x_k + \alpha_k p_k)(\alpha_k p_k) > \nabla f(x_k) p_k$
+%% 	- 如果下降率增大，说明函数值下降得更快了，那么有$f(x_k + \alpha_k p_k) < f(x_k) + \alpha_k \nabla f(x_k) p_k$
+%% 	- 如果下降率减小，说明函数值下降得没那么快了，那么有$f(x_k + \alpha_k p_k) > f(x_k) + \alpha_k \nabla f(x_k) p_k$
+%% 	- 现实情况是，这两种情况可能反复出现，所以可以在$\alpha_k \nabla f(x_k) p_k$前乘一个大于0小于1的系数$\rho$，变为$\rho \alpha_k \nabla f(x_k) p_k$
+%% 	- 那么只要$f(x_k + \alpha_k p_k) \le f(x_k) + \rho \alpha_k \nabla f(x_k) p_k$，就说明函数下降量是足够的
+%% 	- 这种做法的含义是把$x_k$点的下降率认为小一些，那
+ 
+=== 参数$\rho$和$\sigma$的选取 ===
+* 要求参数$\rho$的取值范围是$[0, \frac{1}{2}]$，这样该算法的收敛速度就是超线性收敛。
+* 要求参数$\sigma$的取值范围是$[\rho, 1]$，这样的话，上面两个准则所确定的区间才会有交集，这个证明没去看。
+----
+一般地：
+* $\sigma$越小，一维搜索越精确，但计算量也大。不精确的一维搜索不要求过小的$\sigma$。
+* 而$\rho$越小，条件(1)越容易满足
+* 通常取$\rho = 0.1, \sigma = 0.4$
+
+
+== 算法流程 ==
+ 
+ == 参考 ==
+ 1. [[https://www.codelast.com/%E5%8E%9F%E5%88%9B%E7%94%A8%E4%BA%BA%E8%AF%9D%E8%A7%A3%E9%87%8A%E4%B8%8D%E7%B2%BE%E7%A1%AE%E7%BA%BF%E6%90%9C%E7%B4%A2%E4%B8%AD%E7%9A%84armijo-goldstein%E5%87%86%E5%88%99%E5%8F%8Awo/|用“人话”解释不精确线搜索中的Armijo-Goldstein准则及Wolfe-Powell准则]]
+ 2. [[https://wenku.baidu.com/view/88acdde4482fb4daa48d4bb8.html|工程优化]]

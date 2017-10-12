@@ -1,0 +1,6 @@
+= ctags =
+
+
+----
+== 参考 ==
+* [[http://blog.csdn.net/g_brightboy/article/details/16830395|vim插件ctags的安装和使用]]

@@ -1,0 +1,16 @@
+%title Commands Index
+= Commands =
+
+* [[gcc|gcc]]
+* [[makefile|makefile]]
+* [[pkg-config|pkg-config]]
+* [[ctags|ctags]]
+* [[find|find]]
+* [[grep]]
+* [[split]]
+* [[cat]]
+* [[wc]]
+* [[time]]
+* [[<,<<,>>,>]]
+* [[tar]]
+* [[lsof]]

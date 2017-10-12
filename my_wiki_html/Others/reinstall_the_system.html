@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>reinstall_the_system</title>
+    <link rel="Stylesheet" type="text/css" href="../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../about.html">About</a>
+    <a href="../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+<div id="重装OSX时需要安装哪些软件(命令)"><h1 id="重装OSX时需要安装哪些软件(命令)">重装OSX时需要安装哪些软件(命令)</h1></div>
+<div id="重装OSX时需要安装哪些软件(命令)-命令行软件"><h2 id="命令行软件">命令行软件</h2></div>
+<ul>
+<li>
+install Homeberw
+<pre shell>
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"  
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install wget
+<pre shell>
+brew install wget
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install iterm2
+<pre shell>
+break cask install iterm2
+</pre>
+
+</ul>
+
+<ul>
+<li>
+change default shell to zsh
+<pre shell>
+show the all system shells : cat /etc/shells
+show the current system shell : echo $SHELL
+change the default shee : chsh -s /bin/zsh
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install oh-my-zsh
+<pre shell>
+git clone https://github.com/robbyrussell/oh-my-zsh
+mv oh-my-zsh ~/.oh-my-zsh
+cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install pip
+<pre shell>
+sudo easy_install pip
+使用pip下载的包存在 /Library/Python/2.7/site-packages/ 中
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install jedi
+<pre shell>
+pip install jedi
+installed path : /Library/Python/2.7/site-packages/jedi/
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install ctags
+<pre shell>
+brew install ctags
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install fonts
+<pre shell>
+git clone https://github.com/powerline/fonts.git --depth=1
+fonts/install.sh
+Powerline fonts installed to /Users/ANTON/Library/Fonts
+rm -rf fonts
+</pre>
+
+</ul>
+
+<ul>
+<li>
+set the iterm2 fonts
+<pre shell>
+Profiles-&gt;Text
+font : Source Code Pro for Powerline
+font typeface : Italic
+font size : 17pt
+17pt Source Code Pro Italic for Powerline
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install dream-vim
+<pre shell>
+git clone https://github.com/gzmviavia/dream-vim.git ~/.vim
+sudo python setup.py
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install vim
+<pre shell>
+brew install vim --with-lua --with-override-system-vim
+因为python补全插件jedi需要最新版本的vim，不然这个插件就会出错
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install tree
+<pre shell>
+brew install tree
+tree 显示中文乱码， 可通过参数-N解决， 参数-L num用于控制递归的层数
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install cmatrix
+<pre shell>
+brew install cmatrix
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install gdb
+<pre shell>
+brew install gdb
+在应用程序中选择其他，并进入钥匙串访问
+点击左上角的钥匙串访问-&gt;证书助理-&gt;创建证书
+证书的名称为gdb-cert
+身份类型为自签名根证书
+勾选让我覆盖这些值
+证书类型为代码签名
+一直选择下一步，然后选择系统（而不是登录）
+创建完成之后双击证书，然后选择总是信任，然后重启电脑
+codesign -f -s "gdb-cert" &lt;gnat_install_prefix&gt;/bin/gdb
+http://stackoverflow.com/questions/13913818/how-to-get-a-codesigned-gdb-on-osx
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install ipython
+<pre shell>
+brew install ipython		这个下载的ipython是使用python3作为解释器
+pip install ipython		使用python2.7作为解释器
+pip3 install ipython		使用python3作为解释器
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install tmux
+<pre shell>
+brew install tmux
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install you-get
+<pre>
+brew install you-get
+</pre>
+
+</ul>
+	
+<ul>
+<li>
+install mysql
+<pre>
+brew isntall mysql
+配置文件my.cnf地址 : /usr/local/etc/
+mysql数据存储的地址: /usr/local/var/mysql
+</pre>
+
+</ul>
+
+<ul>
+<li>
+install opencv
+<pre>
+//build without python2 support
+brew isntall mysql --without-python
+</pre>
+
+</ul>
+<div id="重装OSX时需要安装哪些软件(命令)-图形界面软件"><h2 id="图形界面软件">图形界面软件</h2></div>
+<ul>
+<li>
+QQ
+
+<li>
+Microsoft office 破解版
+
+<li>
+迅雷
+
+<li>
+网易云音乐
+
+<li>
+欧陆词典破解版
+
+<li>
+印象笔记
+
+<li>
+MPlayerX
+
+<li>
+The Unarchiver
+
+<li>
+搜狗输入法
+
+<li>
+Foxit Reader
+
+</ul>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

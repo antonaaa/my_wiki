@@ -1,0 +1,13 @@
+= Digital Image Processing =
+
+* [[What_is_Digital_Image_Processing|什么是图像处理]]
+* [[图像的存储]]
+* [[The_type_of_image|图像的类型]]
+* [[像素之间的一些基本关系]]
+* [[数字图像处理中的数学工具]]
+* [[图像增强]]
+
+* [[空间域变换]]
+== Histogram Processing ==
+* [[Histogram_Equalization|Histogram Equalization]]
+* [[Histogram_Matching|Histogram Matching(Specification)]]

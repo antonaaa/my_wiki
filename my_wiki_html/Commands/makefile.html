@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>makefile</title>
+    <link rel="Stylesheet" type="text/css" href="../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../about.html">About</a>
+    <a href="../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+<div id="makefile"><h1 id="makefile">makefile</h1></div>
+
+
+<ul>
+<li>
+<code>make</code>是一个指令，它解释<code>Makefile</code>中的指令。
+
+<li>
+在<code>Makefile</code>中描述了整个工程所有文件的编译顺序、编译规则。
+
+<li>
+<code>Makefile</code>有自己的关键字、函数。而且在<code>Makefile</code>中可以使用系统shell所提供的命令来完成想要的工作。
+
+<li>
+<code>Makefile</code>不仅可以用来管理<code>C/C++</code>工程，那些编译器能够在shell下运行的语言所构建的工程都能用<code>make</code>工具来管理。
+
+<li>
+<code>make</code>执行时，根据<code>Makefile</code>的规则检查文件的修改情况，决定是否执行定义的动作（那些修改过的文件将会被重新编译）
+
+</ul>
+
+<hr />
+
+<p>
+编译
+链接
+静态库
+共享库
+</p>
+
+<hr />
+<p>
+当使用<code>make</code>工具编译时，以下几种文件在执行<code>make</code>时将会被编译（重新编译）
+</p>
+<ul>
+<li>
+所有的源文件没有被编译过，则对各个C源文件进行编译并链接，生成最后的可执行程序。
+
+<li>
+每一个在上次执行完<code>make</code>之后被修改的C源文件在本次执行<code>make</code>时将会被重新编译。
+
+<li>
+头文件在上一次执行<code>make</code>之后被修改，则所有包含次头文件的C源文件在本次执行<code>make</code>时将会被重新编译。（必须在<code>Makefile</code>中体现次包含关系才会如此）
+
+</ul>
+
+<p>
+后两种情况是 make 只将修改过的 C 源文件重新编译生成.o 文件，对于没有修改
+的文件不进行任何工作。重新编译过程中，任何一个源文件的修改将产生新的对应的.o
+文件，新的.o 文件将和以前的已经存在、此次没有重新编译的.o 文件重新连接生成最
+后的可执行程序。
+</p>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

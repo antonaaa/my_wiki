@@ -1,0 +1,15 @@
+%title C_C++ Index
+= C & C++ =
+== 知识 ==
+* [[C命名规范]]
+
+== 编译/调试 ==
+* [[../Commands/gcc|gcc]]
+* [[../Commands/makefile|makefile]]
+* [[../Commands/pkg-config|pkg-config]]
+* [[.o、.a、.so文件的区别]]
+
+== Q&A ==
+
+== 文档 ==
+* [[http://zh.cppreference.com/w/%E9%A6%96%E9%A1%B5|C++ 参考手册]]

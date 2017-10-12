@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Elementary Row Transformation and Matrix Elimination</title>
+    <link rel="Stylesheet" type="text/css" href="../../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../../about.html">About</a>
+    <a href="../../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+
+<div id="Elementary Row Transformation and Matrix Elimination"><h1 id="Elementary Row Transformation and Matrix Elimination">Elementary Row Transformation and Matrix Elimination</h1></div>
+<blockquote>
+定义：如果两个方程组具有相同的解集，则称它们是等价的(equivalent)。
+</blockquote>
+<p>
+如果有两个等价的方程组，那么只要求解其中简单的那个就行了。
+</p>
+
+<div id="Elementary Row Transformation and Matrix Elimination-Elementary Row Transformation"><h2 id="Elementary Row Transformation">Elementary Row Transformation</h2></div>
+<ol>
+<li>
+交换两个方程组中任意两个方程的位置，不会改变方程组的解集（交换矩阵的任意两行）。
+
+<li>
+将方程组的某个方程乘以一个非0实数，不会改变方程组的解集（数乘矩阵的一行）。
+
+<li>
+将方程组的某个方程的倍数加到另一个方程上，不会改变方程组的解集（矩阵的某一行加上其它行的倍数）。
+
+</ol>
+
+<p>
+上面这三种操作都可以得到与之等价的方程组，称为<code>初等行变换</code>；所以可以利用初等行变换，从而得到一个相对容易求解的方程组，从而进行求解。
+</p>
+
+
+<p>
+\begin{cases}
+a_{11}x_1 + a_{12}x_2 + a_{13}x_3 = b_1 \\
+a_{21}x_1 + a_{22}x_2 + a_{23}x_3 = b_2 \\
+a_{31}x_1 + a_{32}x_2 + a_{33}x_3 = b_3
+\end{cases}
+</p>
+
+<p>
+如果在方程组上直接进行消元，那么每次都要写很多重复的x，所以把其写成增广矩阵的形式，从而更好的消元。
+\begin{equation}
+{
+	\left[ 
+		\begin{array}{ccc|c}
+		a_{11} &amp; a_{12} &amp; a_{13} &amp; b_1\\ 
+		a_{21} &amp; a_{22} &amp; a_{23} &amp; b_2\\ 
+		a_{31} &amp; a_{32} &amp; a_{33} &amp; b_3
+		\end{array}
+	\right]
+}
+\end{equation}
+</p>
+
+<div id="Elementary Row Transformation and Matrix Elimination-Matrix Elimination"><h2 id="Matrix Elimination">Matrix Elimination</h2></div>
+<p>
+n * n的矩阵如果具有唯一解，那么可以用初等行变换将其消元称严格三角形方程组，即上三角矩阵。
+</p>
+<blockquote>
+消元步骤如下：
+</blockquote>
+<ol>
+<li>
+选取\(a_{11}\)为主元(pivot)，将第i(2~n)行都减去第一行的\(\frac{a_{i1}}{a_{11}}\)倍，这样会将矩阵的第2~n行的第一列都变成0。
+
+<li>
+如果第i次选择的主元\(a_{ii} = 0\)，那么找到一个\(a_{ji} \neq 0，j &gt; i\)（即从该列往下找），然后交换第i行和第j行。
+
+<li>
+如果往下找找不到，说明该列不存在主元；那么从该行的下一列寻找主元，以此类推。
+
+</ol>
+
+<p>
+以此类推，就会将矩阵消元成严格的上三角矩阵，如果方程组只有唯一解的话。
+</p>
+
+<p>
+\begin{equation}
+{
+{
+	\left[ 
+		\begin{array}{ccc}
+		a_{11} &amp; ?      &amp; ?      &amp; \cdots &amp; ?\\ 
+		?      &amp; ?      &amp; ?      &amp; \cdots &amp; ?\\
+		\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; ?\\
+		?      &amp; ?      &amp; ?      &amp; \cdots &amp; ?
+		\end{array} 
+	\right]
+}
+\to
+	\left[ 
+		\begin{array}{ccc}
+		a_{11} &amp; ?      &amp; ?      &amp; \cdots &amp; ?\\ 
+		0      &amp; a_{12} &amp; ?      &amp; \cdots &amp; ?\\
+		\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; ?\\
+		0      &amp; ?      &amp; ?      &amp; \cdots &amp; ?
+		\end{array} 
+	\right]
+}
+\to
+\cdots
+\to
+{
+	\left[ 
+		\begin{array}{ccc}
+		a_{11} &amp; ?      &amp; ?      &amp; \cdots &amp; ?\\ 
+		0      &amp; a_{22} &amp; ?      &amp; \cdots &amp; ?\\
+		\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; ?\\
+		0      &amp; 0      &amp; 0      &amp; \cdots &amp; a_{nn}
+		\end{array} 
+	\right]
+}
+\end{equation}
+</p>
+
+
+<p>
+例子：对下面的方程组进行消元
+</p>
+
+<p>
+\begin{cases}
+2x_1 + 4x_2 + 5x_3 = 3 \\
+2x_1 + 4x_2 + 3x_3 = 4 \\
+2x_1 + 5x_2 + 6x_3 = 5 \\
+\end{cases}
+</p>
+
+
+<p>
+将其写成增广矩阵的形式，并对该矩阵进行消元
+\begin{equation}
+{
+	\left[ 
+		\begin{array}{ccc|c}
+		2 &amp; 4 &amp; 5 &amp; 3\\
+		2 &amp; 4 &amp; 3 &amp; 4\\
+		2 &amp; 5 &amp; 6 &amp; 5
+		\end{array}
+	\right]
+}
+\end{equation}
+</p>
+
+<p>
+step1. 选择\(a_{11} = 2\)为主元
+\begin{equation}
+{
+	\left[ 
+		\begin{array}{ccc|c}
+		2 &amp; 4 &amp; 5 &amp; 3\\
+		2 &amp; 4 &amp; 3 &amp; 4\\
+		2 &amp; 5 &amp; 6 &amp; 5
+		\end{array}
+	\right]
+}
+\to
+{
+	\left[ 
+		\begin{array}{ccc|c}
+		2 &amp; 4 &amp; 5 &amp; 3\\
+		0 &amp; 0 &amp; -2 &amp; 1\\
+		0 &amp; 1 &amp; 1 &amp; 2 
+		\end{array}
+	\right]
+}
+\end{equation}
+step2. 由于\(a_{22} = 0\)，所以我往下寻找该列不为0的行，并与第2行交换
+\begin{equation}
+{
+	\left[ 
+		\begin{array}{ccc|c}
+		2 &amp; 4 &amp; 5 &amp; 3\\
+		0 &amp; 0 &amp; -2 &amp; 1\\
+		0 &amp; 1 &amp; 1 &amp; 2 
+		\end{array}
+	\right]
+}
+\to
+{
+	\left[ 
+		\begin{array}{ccc|c}
+		2 &amp; 4 &amp; 5 &amp; 3\\
+		0 &amp; 1 &amp; 1 &amp; 2 \\
+		0 &amp; 0 &amp; -2 &amp; 1
+		\end{array}
+	\right]
+}
+\end{equation}
+</p>
+
+<p>
+这种消元的方法叫做高斯消元（Gaussian Elimination)，最后要进行回到才能够解出\(x_1,x_2,x_3\)。
+</p>
+
+<p>
+还有一种消元的方法叫做高斯约旦消元（Gauss-Jordan Elimination），该方法选取主元之后，不仅往下消元，还往上消元，这种消元方法不需要回带就能够解出\(x_1,x_2,x_3\)（前提是方程组只有唯一解）。
+</p>
+
+<hr />
+<p>
+高斯消元时间复杂度：\(O(\frac{1}{3}n^3+n^2)\)
+</p>
+
+<p>
+高斯约旦消元时间复杂度：\(O(n^3+n)\)
+</p>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

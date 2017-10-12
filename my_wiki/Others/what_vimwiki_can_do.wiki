@@ -1,0 +1,226 @@
+%title what vimwiki can do
+== Intro ==
+1. 管理你的笔记和想法
+2. 管理待办事项
+3. 写文档
+4. 写日记
+5. 将上面的一切转化为HTML
+
+将鼠标放在一段文字(例如tasks)上面，点击Enter键，那么就会变成一个链接(变成[ [tasks] ]),再次点击Enter就会打开该链接所对应的文件。
+
+
+== Prerequisites ==
+{{{
+set nocompatible
+filetype plugin on
+syntax on
+}}}
+没有这些东西，vimwiki可能工作异常。
+
+== Mappings ==
+
+=== Global Mappings ===
+* `<leader>ww`
+	- `<leader>ww`或者`<Plug>VimwikiIndex`将会打开wiki的首页;如果你多次输入`<learder>ww`,那么你输入了几次,就会进入第几个wiki的首页;`g:vimwiki_list`的配置中，从上往下分别是第一个、第二个...wiki
+    - :nmap <Leader>w <Plug>VimwikiIndex
+	
+* `<leader>wt`
+	- `<leader>ww`或`<Plug>VimwikiTabIndex`的功能和`<leader>ww`类似，只不过是在新Tab(vim buffer)中打开wiki的首页
+    - :nmap <Leader>t <Plug>VimwikiTabIndex
+
+* `<leader>ws`
+	- `<leader>ws`或`<Plug>VimwikiUISelect`列出并选择可用的wiki
+    - :nmap <Leader>wq <Plug>VimwikiUISelect
+* `<leader>wi`
+* `<leader>w<leader>w`
+* `<leader>w<leader>t`
+* `<leader>w<leader>y`
+
+=== Local Mappings ===
+* :nmap <Leader>wc <Plug>Vimwiki2HTML
+* :nmap <silent><buffer> <Leader>wc <Plug>Vimwiki2HTML
+
+
+== Wiki Syntax ==
+
+=== Typefaces ===
+{{{  
+*bold text*			粗体
+_italic text_			斜体
+~~strikeout text~~		删除
+`code (no syntax) text`		代码
+super^script^			上标
+sub,,scriptaa,,			下标
+}}}
+
+=== Links ===
+
+==== Wikilinks ====
+{{{  
+[[This is a link]]
+[[This is a link source|Description of the link]]
+wiki文件没有必要放在你wiki的根目录，你可以将他们放在子目录下
+[[projects/Important Project 1]]
+为了从该文件跳转到index文件，可以使用这样的链接
+[[../index]]		相对路径
+or
+[[/index]]		绝对路径
+}}}
+
+==== InterWiki ====
+如果你有超过一个wiki，那么不同的wiki之间也是可以跳转的
+{{{  
+[[wiki1:This is a link]]
+or
+[[wiki1::This is a link|Description of the link]]
+	
+}}}
+wiki后面的数字从0..N-1,标识g:vimwiki_list中的wiki
+
+==== Anchors  ====
+也可以为links加上锚，那么在跳转到网页时就会跳到对应的锚处
+{{{
+[[This is a link#These are Anchors|Description of the link]]
+相应的，我们要在This is a link 对应的文件中的某处加上锚[[#These are Anchors]]
+}}}
+
+==== Row URLS ====
+也可以直接书写url，那么会在wiki上直接显示该url
+{{{
+https://github.com/vimwiki/vimwiki.git
+mailto:habamax@gmail.com
+ftp://vim.org
+}}}
+
+==== External files ==== 
+模式file和local允许你链接任意的资源,你可以使用绝对路径或者相对路径
+{{{
+[[file:C:/Users/somebody/d/e/f/music.mp3]]
+[[file:~/a/b/c/music.mp3]]
+[[file:../assets/data.csv|Important Data]]
+[[local:C:/Users/somebody/d/e/f/music.mp3]]
+[[file:/home/user/documents/|Link to a directory]]
+}}}
+这些links将会被系统命令打开， !xdg-open(linux), !open(Max), !start(Windows)
+为了自定义这些行为，可以查看`VimwikiLinkHandler`
+在Vim下，file和local行为相同;但是转为为HTML时,前者会转为绝对路径，而后者会转为相对路径,如果你要将HTML移动到其它电脑上，那么后者更加有用
+	
+==== Transclusion (Wiki-Include) Links ====
+为了在wiki页面上显示图片,那么可以使用`{{` 和 `}}`来包含图片的url,那么该url所对应的图片内容就会被包含进HTML中
+	* 使用本地图片
+		- `{{file:../../images/vimwiki_logo.png}}`
+	* 使用网络上的图片
+		- `{{http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png}}`
+	* 为图片添加alt属性
+		- `{{http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png|Vimwiki}}`
+		- 转换成HTML后: `<img src="http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png"alt="Vimwiki"/>`
+	* 指定图片的style
+		- `{{http://.../vimwiki_logo.png|cool stuff|style="width:150px;height:120px;"}}`
+		- 转换成HTML后 : `<img src="http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png" alt="cool stuff" style="width:150px; height:120px"/>`
+	* 指定图片的class
+		- `{{http://.../vimwiki_logo.png||class="center flow blabla"}}`
+		- 转换成HTML后 : `<img src="http://vimwiki.googlecode.com/hg/images/vimwiki_logo.png" alt="" class="center flow blabla"/>`
+==== Thumbnail links ====
+显示图片有两种，一个是点击图片没有反应；二是点击图片会跳转到相应的链接;
+前者是`Transclusion (Wiki-Include) Links`,后者是`Thumbnail links`。
+	- 构造的方法就是下面这样
+	`[[http://someaddr.com/bigpicture.jpg|{{http://someaddr.com/thumbnail.jpg}}]]`
+	- 转为HTML后就变成了
+	`<a href="http://someaddr.com/ ... /.jpg"><img src="http://../thumbnail.jpg /></a>`
+==== Markdown links ====
+
+
+=== Headers ===
+有六级标题
+* `= Header level1 =           `
+* `== Header level2 ==         `
+* `=== Header level3 ===       `
+* `==== Header level4 ====     `
+* `===== Header level5 =====   `
+* `====== Header level6 ====== `
+
+=== Paragraphs ===
+=== Lists ===
+无序列表
+* `-Bulleted list item1`
+* `-Bulleted list item2`
+or:
+* `* Bulleted list item1`
+* `* Bulleted list item2`
+
+有序列表
+* `1. Numbered list item1`
+* `2. Numbered list item1`
+* `3. Numbered list item1`
+or:
+* `1) Numbered list item1`
+* `2) Numbered list item1`
+* `3) Numbered list item1`
+or:
+* `A) Numbered list item 1`
+* `B) Numbered list item 2`
+* `C) Numbered list item 3`
+or:
+* `i) Numbered list item 1`
+* `ii) Numbered list item 2`
+* `iii) Numbered list item 3`
+or:
+* `I) Numbered list item 1`
+* `II) Numbered list item 2`
+* `III) Numbered list item 3`
+
+
+=== Tables ===
+=== Preformatted text ===
+可以使用`{{{`和`}}}`来定义一个预定义格式的文本
+
+=== Mathematical formular ===
+{{{
+行内公式:
+ $ \sum_i a_i^2 = 1 $
+ 
+行间公式
+ {{$
+ \sum_i a_i^2
+ =
+ 1
+ }}$
+}}}
+
+[[http://blog.csdn.net/u010945683/article/details/46757757|Mathjax基本使用公式]]
+[[http://blog.csdn.net/garfielder007/article/details/51646604|LaTeX 各种命令，符号]]
+
+=== Blockquotes ===
+如果一个文本每一行前面都有超过4个空格，那么就是一个引用文本
+
+=== Comments ===
+如果一行以`%%`开头，那么这一行就是注释，也即该行注释不会转化为HTML
+%% This is a text, and would not be in HTML
+
+=== Horizontal line ===
+`----`将会显示一个水平的横线,即`<hr/>`
+
+== Folding/Outline ==
+== Placeholders ==
+- `%title`
+- `%nohtml`
+- `%template`
+- `%date`
+== Lists ==
+== Tables ==
+== Diary ==
+== Anchors ==
+== Options ==
+=== Registered Wiki ===
+=== Temporary Wiki ===
+=== Per-Wiki Options ===
+=== Global Options ===
+== Contributing ==
+== Development ==
+== Changelog ==
+== Lincese ==
+
+
+
+== 目录插件 ==
+* https://github.com/yaohaixiao/autocjs

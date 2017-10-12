@@ -1,0 +1,26 @@
+= pkg-config =
+
+`pkg-config`是一个用于获取下载到系统中的库的信息，通常用于编译和链接一个或者多个库。下面是一个典型的例子。
+{{{shell
+gcc program.c `pkg-config --cflags --libs opencv`
+}}}
+
+
+`pkg-config`从特殊的元数据文件中读取库的信息。这些文件被命名为`包名.pc`，例如`opencv.pc`。在大多数的系统中，其搜索文件的路径如下:
+* `pkg-config`在路径`/usr/lib/pkgconfig`、`/usr/share/pkgconfig`、`/usr/local/lib/pkgconfig`、`/usr/local/share/pkgconfig`中搜索这些文件。
+* 另外其也会在`PKG_CONFIG_PATH`环境变量所指定的地址中寻找。
+
+
+`pkg-config`支持以下这些可选命令：
+* `--modversion` ：输出库的版本。
+* `--cflags` ：输出由`-I`指定的头文件的位置。
+* `--libs` ：输出由`-L`指定的库的位置和由`-l`指定的库的名字。
+* `--libs-only-L` ：只输出由`-L`指定的库的位置。
+* `--libs-only-l` ：只输出由`-l`指定的库的名字
+* `--list-all` ：列出所有在`pkg-config`路径中找到的库。
+* `--static` ：列出使用与静态链接的库。
+
+
+----
+== 参考 ==
+[[http://blog.csdn.net/luotuo44/article/details/24836901|pkg-config的一些用法,如何编写.pc文件]]

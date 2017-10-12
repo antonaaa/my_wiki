@@ -1,0 +1,89 @@
+%title Mat类源码解读
+
+
+create(int _dims, ...)定义在matrix.cpp : 184
+{{{
+DataDepth : core.hpp 410
+MatExpr : mat.hpp 1230
+}}}
+
+{{{cpp
+//core.hpp
+template<typename _Tp> class Size_;
+template<typename _Tp> class Point_;
+template<typename _Tp> class Rect_;
+template<typename _Tp, int cn> class Vec;
+template<typename _Tp, int m, int n> class Matx;
+typedef Vec<uchar, 2> Vec2b;
+typedef Vec<uchar, 3> Vec3b;
+typedef Vec<uchar, 4> Vec4b;
+
+typedef Vec<short, 2> Vec2s;
+typedef Vec<short, 3> Vec3s;
+typedef Vec<short, 4> Vec4s;
+
+typedef Vec<ushort, 2> Vec2w;
+typedef Vec<ushort, 3> Vec3w;
+typedef Vec<ushort, 4> Vec4w;
+
+typedef Vec<int, 2> Vec2i;
+typedef Vec<int, 3> Vec3i;
+typedef Vec<int, 4> Vec4i;
+typedef Vec<int, 6> Vec6i;
+typedef Vec<int, 8> Vec8i;
+
+typedef Vec<float, 2> Vec2f;
+typedef Vec<float, 3> Vec3f;
+typedef Vec<float, 4> Vec4f;
+typedef Vec<float, 6> Vec6f;
+
+typedef Vec<double, 2> Vec2d;
+typedef Vec<double, 3> Vec3d;
+typedef Vec<double, 4> Vec4d;
+typedef Vec<double, 6> Vec6d;
+
+typedef Point_<int> Point2i;
+typedef Point_<int64> Point2l;
+typedef Point2i Point;
+typedef Size_<int> Size2i;
+typedef Size_<int64> Size2l;
+typedef Size_<double> Size2d;
+typedef Size2i Size;
+typedef Rect_<int> Rect;
+typedef Point_<float> Point2f;
+typedef Point_<double> Point2d;
+typedef Size_<float> Size2f;
+typedef Point3_<int> Point3i;
+typedef Point3_<float> Point3f;
+typedef Point3_<double> Point3d;
+}}}
+= Mat类源码解读 =
+
+* Mat类有以下成员变量
+{{{cpp
+int flags;
+int dims;
+int rows, cols;
+uchar* data;
+
+int* refcount;
+
+uchar* datastart;
+uchar* dataend;
+uchar* datalimit;
+
+MatAllocator* allocator;
+
+MSize size;
+MStep step;
+}}}
+
+* Mat类有以下成员函数
+{{{cpp
+}}}
+
+
+----
+{{{
+typedef unsigned char uchar;
+}}}

@@ -1,0 +1,13 @@
+= C命名规范 =
+
+* 函数
+	- 函数名首字母小写，其后每个单词的首字母大写，如`getTextLen(...)`
+* 变量
+	- 变量名小写，并使用`_`分割，如`tot_len`
+* 结构体
+	- 每个单词的首字母大写，如`struct JsonFileHandler{};`
+* 结构体函数
+	- 使用结构体的名字作为函数的前缀，函数名小写，并使用`_`分割，如`JsonFileHandler_get_text_len(JsonFileHandler * handler)`
+	- 使用结构体的名字作为函数的前缀，函数名首字母小写，其后每个单词的首字母大写，如`JsonFileHandler_getTextLen(JsonFileHandler * handler)`
+* 结构体成员
+	- 变量名小写，并使用`_`分割，如`tot_len`

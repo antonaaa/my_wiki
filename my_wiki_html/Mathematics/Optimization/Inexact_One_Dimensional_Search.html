@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Inexact One Dimensional Search</title>
+    <link rel="Stylesheet" type="text/css" href="../../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../../about.html">About</a>
+    <a href="../../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+<div id="Inexact One Dimensional Search"><h1 id="Inexact One Dimensional Search" class="justcenter">Inexact One Dimensional Search</h1></div>
+ 
+ 
+<div id="Inexact One Dimensional Search-不精确搜索的两个要求"><h2 id="不精确搜索的两个要求" class="justcenter">不精确搜索的两个要求</h2></div>
+<p>
+ 不精确搜索是找到一个合适的步长\(\alpha_k\)，使得函数值有足够的下降。
+</p>
+ 
+<p>
+ 注意是足够的下降，
+</p>
+ 
+<p>
+ 下图， 函数在\(x_k\)处，沿着方向\(p_k\)是先下降后上升的。
+</p>
+ 
+<p>
+<a href="..&#47;..&#47;..&#47;my_wiki&#47;Mathematics&#47;Optimization&#47;resources&#47;不精确搜索1.png"><img src="../../../my_wiki/Mathematics/Optimization/resources/不精确搜索1.png" alt="函数图像" /></a>
+</p>
+ 
+<p>
+ 如果只是下降，那么只要取步长为很小的一个数，那么沿着该方向走一小步，函数值肯定是下降的
+ 所以还要要求步长不能太小。 （而且我还有一个猜想就是，如果步长太小，导致走完之后，下次求出来的下降方向还是该方向，那么还是要沿着太方向继续走，导致计算量浪费了）
+</p>
+ 
+ 
+<p>
+ 所以不精确搜索有两个要求。
+</p>
+<ol>
+<li>
+函数值有足够的下降
+
+<li>
+步长不能太小
+
+</ol>
+
+<hr />
+<div id="Inexact One Dimensional Search-Wolfe-Powell准则"><h2 id="Wolfe-Powell准则">Wolfe-Powell准则</h2></div>
+<ol>
+<li>
+\(f(x_k + \alpha_k p_k) \le f(x_k) + \alpha_k \rho \nabla^T f(x_k) p_k\)
+
+<ul>
+<li>
+也可以写成\(f(x_{k+1}) \le f(x_k) + \alpha_k \rho \nabla^T f(x_k) p_k\)
+
+<li>
+进而写成\(f(x_k) - f(x_{k-1}) \ge - \alpha_k \rho \nabla^T f(x_k) p_k\)
+
+</ul>
+<li>
+\(\nabla^T f(x_k + \alpha_k p_k) \ge \sigma \nabla^T f(x_k) p_k\)
+
+</ol>
+
+<div id="Inexact One Dimensional Search-Wolfe-Powell准则-如何描述函数下降量满足要求"><h3 id="如何描述函数下降量满足要求">如何描述函数下降量满足要求</h3></div>
+<p>
+那么如何描述函数值的下降量是足够的呢？？?
+</p>
+<ul>
+<li>
+让用户传一个参数进来，下降量大于该参数就说明函数有足够的下降？？
+
+<ul>
+<li>
+不可行的， 离极值点远时，函数下降的量纲大
+
+<li>
+离极值点近时，函数下降的量纲下
+
+<li>
+所以不可能让用户来定义这个下降量参数的
+
+</ul>
+<li>
+函数在远离极值点时，可能沿着下降方向走很小的步长，函数值就下降了10；而在靠近极值点时，走了相同的步长，函数值却下降了0.1
+
+<ul>
+<li>
+所以函数多大的下降量是足够的，可以用函数在该点的下降率（方向导数为负，称为下降率，我是这么认为的）来衡量。
+
+<li>
+而且随着步长的增大，函数的下降量也应该是增大的，所以初步可以认为函数的下降量应该是\(\alpha_k \nabla^T f(x_k) p_k\)，其中\(\alpha_k\)是步长，而\(\nabla^T f(x_k) p_k\)是下降率。
+
+<li>
+那么函数值的变化应该满足这种关系\(f(x_k + \alpha_k p_k) \le f(x_k) + \alpha_k \nabla^T f(x_k) p_k\)，因为下降量是负的， 所以是小于。
+
+<li>
+但是仔细想想，其实这个式子只有在步长很小的时候才能满足，因为随着步长的增大，下降率是变化的，如果下降率减小了，那么这个式子就不满足了，如下图：
+
+<li>
+<a href="..&#47;..&#47;..&#47;my_wiki&#47;Mathematics&#47;Optimization&#47;resources&#47;不精确搜索2.png"><img src="../../../my_wiki/Mathematics/Optimization/resources/不精确搜索2.png" alt="函数图像" /></a>
+
+<li>
+所以可以在下降率之前乘以一个\([0,1]\)之间的小数\(\rho\)，那么只要满足\(f(x_k + \alpha_k p_k) \le f(x_k) + \rho \alpha_k \nabla^T f(x_k) p_k\)，就说明函数值有足够的下降量了。
+
+<li>
+乘以一个系数\(\rho\)的含义是把\(x_k\)点的下降率认为小一些，目的是考虑到之后下降率可能变小，
+
+<li>
+下图描述了条件\(f(x_k + \alpha_k p_k) \le f(x_k) + \rho \alpha_k \nabla^T f(x_k) p_k\)允许的步长\(\alpha_k\)的取值范围是区间\([0, c]\)。
+	<a href="..&#47;..&#47;..&#47;my_wiki&#47;Mathematics&#47;Optimization&#47;resources&#47;不精确搜索3.png"><img src="../../../my_wiki/Mathematics/Optimization/resources/不精确搜索3.png" alt="函数图像" /></a>
+
+</ul>
+</ul>
+
+
+
+<div id="Inexact One Dimensional Search-Wolfe-Powell准则-如何描述步长满足要求"><h3 id="如何描述步长满足要求">如何描述步长满足要求</h3></div>
+<p>
+那么如何描述步长不能够太小呢？？？
+</p>
+<ul>
+<li>
+为什么要避免步长太小的呢，前面说过了我的一个猜想，如果步长太小，导致走完之后，下次求出来的下降方向还是该方向，那么还是要沿着太方向继续走，导致计算量浪费了。
+
+<li>
+那么换个角度来考虑就是，如果走了\(\alpha_k\)步后，沿着该方向的下降率足够大的话，那么就可以沿着该方向继续前进。
+
+<li>
+\(\nabla^T f(x_k + \alpha_k p_k) p_k \ge \sigma \nabla^T f(x_k) p_k\)，若步长满足该条件，那么有以下2种情况：
+
+<ul>
+<li>
+在点\(x_k + \alpha_k  p_k\)处，\(p_k\)是上升方向。
+
+<li>
+函数f在\(x_k + \alpha_k  p_k\)处沿方向\(p_k\)的下降率已经低于f在\(x_k\)方向的下降率的\(\sigma\)倍。
+
+<li>
+可以看出，如果步长太小的话，上面的2个种情况都不会成立的。
+
+<li>
+\(\sigma\)越小，一维搜索越精精确，因为\(\sigma\)越小，说明只有\(x_k + \alpha_k p_k\)处沿方向\(p_k\)的下降率接近0时才会满足条件，也就是说\(x_k + \alpha_k  p_k\)差不多是该方向上的极值点了。
+
+<li>
+下图描述了条件\(\nabla^T f(x_k + \alpha_k p_k) p_k \ge \sigma \nabla^T f(x_k) p_k\)，允许的步长的取值范围是区间\([e, a]\)。
+
+<li>
+<a href="..&#47;..&#47;..&#47;my_wiki&#47;Mathematics&#47;Optimization&#47;resources&#47;不精确搜索4.png"><img src="../../../my_wiki/Mathematics/Optimization/resources/不精确搜索4.png" alt="函数图像" /></a>
+
+</ul>
+</ul>
+
+ 
+<div id="Inexact One Dimensional Search-Wolfe-Powell准则-参数$\rho$和$\sigma$的选取"><h3 id="参数$\rho$和$\sigma$的选取">参数\(\rho\)和\(\sigma\)的选取</h3></div>
+<ul>
+<li>
+要求参数\(\rho\)的取值范围是\([0, \frac{1}{2}]\)，这样该算法的收敛速度就是超线性收敛。
+
+<li>
+要求参数\(\sigma\)的取值范围是\([\rho, 1]\)，这样的话，上面两个准则所确定的区间才会有交集，这个证明没去看。
+
+</ul>
+<hr />
+<p>
+一般地：
+</p>
+<ul>
+<li>
+\(\sigma\)越小，一维搜索越精确，但计算量也大。不精确的一维搜索不要求过小的\(\sigma\)。
+
+<li>
+而\(\rho\)越小，条件(1)越容易满足
+
+<li>
+通常取\(\rho = 0.1, \sigma = 0.4\)
+
+</ul>
+
+
+<div id="Inexact One Dimensional Search-算法流程"><h2 id="算法流程">算法流程</h2></div>
+ 
+<div id="Inexact One Dimensional Search-参考"><h2 id="参考" class="justcenter">参考</h2></div>
+<ol>
+<li>
+<a href="https:&#47;&#47;www.codelast.com&#47;%E5%8E%9F%E5%88%9B%E7%94%A8%E4%BA%BA%E8%AF%9D%E8%A7%A3%E9%87%8A%E4%B8%8D%E7%B2%BE%E7%A1%AE%E7%BA%BF%E6%90%9C%E7%B4%A2%E4%B8%AD%E7%9A%84armijo-goldstein%E5%87%86%E5%88%99%E5%8F%8Awo&#47;">用“人话”解释不精确线搜索中的Armijo-Goldstein准则及Wolfe-Powell准则</a>
+
+<li>
+<a href="https:&#47;&#47;wenku.baidu.com&#47;view&#47;88acdde4482fb4daa48d4bb8.html">工程优化</a>
+
+</ol>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

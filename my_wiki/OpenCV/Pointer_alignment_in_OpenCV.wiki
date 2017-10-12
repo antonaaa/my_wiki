@@ -1,0 +1,61 @@
+= OpenCV中的指针对齐 =
+
+`core.hpp`中在305行左右声明了`
+* `CV_EXPORTS void* fastMalloc(size_t bufSize);`
+* `CV_EXPORTS void fastFree(void* ptr);`
+这两个函数，分别用于分配和释放内存，这两个函数的定义放在了`alloc.cpp`中的62行左右。
+
+`core.hpp`中在331行左右定义了两个辅助函数来配合上面的`fastMalloc`函数分配内存。
+
+* `alignSize`
+* 该函数的作用是得到一个最小的大于sz，且能够整除n的数。用数学表达式表达出来就是(sz + n - 1) / n * n;
+	这里使用位运算来实现，显然是为了更快一些。
+* 由于n是2的次幂，例如如果n是`0000 1000`，那么-n就是`1111 1000`，也就是说-n的作用是把1左边的0都变成1.
+* n-1的二进制表示是`0000 0111`
+* 所以sz+n-1之后，要么不产生进位，那么说明sz刚好是n的倍数；要么产生进位，那么与n进行`&`操作之后，把最右边的3位全变成0，也就变成了n的倍数。
+
+* alignPtr
+* 原理同alignSize，alignPtr返回一个内存地址，该函数>=ptr的一个地址，且该地址能被n整除。
+----
+
+{{{cpp
+template<typename _Tp> static inline _Tp* alignPtr(_Tp* ptr, int n=(int)sizeof(_Tp))
+{
+    return (_Tp*)(((size_t)ptr + n-1) & -n);
+}
+static inline size_t alignSize(size_t sz, int n)
+{
+    assert((n & (n - 1)) == 0); // n is a power of 2
+    return (sz + n-1) & -n;
+}
+}}}
+
+{{{cpp
+void* fastMalloc( size_t size )
+{
+    uchar* udata = (uchar*)malloc(size + sizeof(void*) + CV_MALLOC_ALIGN);
+    if(!udata)
+        return OutOfMemoryError(size);
+    uchar** adata = alignPtr((uchar**)udata + 1, CV_MALLOC_ALIGN);
+    adata[-1] = udata;
+    return adata;
+}
+
+void fastFree(void* ptr)
+{
+    if(ptr)
+    {
+        uchar* udata = ((uchar**)ptr)[-1];
+        CV_DbgAssert(udata < (uchar*)ptr &&
+               ((uchar*)ptr - udata) <= (ptrdiff_t)(sizeof(void*)+CV_MALLOC_ALIGN));
+        free(udata);
+    }
+}
+}}}
+
+* 第`3`行在参数`size`的基础上，额外加上了一个指针的大小，和CV_MALLOC_ALIGN大小的内存
+* 第`6`行进行了指针对齐，`alignPtr`，
+
+
+* [[http://blog.csdn.net/lming_08/article/details/26821963?utm_source=tuicool&utm_medium=referral|OpenCV源码之内存分配-指针对齐]]
+* [[http://www.cnblogs.com/summerRQ/articles/2408767.html|opencv中的安全指针和指针对齐]]
