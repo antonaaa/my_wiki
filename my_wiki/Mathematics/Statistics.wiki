@@ -1,0 +1,8 @@
+%title Statistics
+= Statistics =
+
+
+== 区间估计和假设检验的区别 ==
+1. [[http://blog.csdn.net/u013015687/article/details/45937027|参数估计、假设检验及它们之间的关系（相同点、联系与区别）]]
+2. [[https://www.zhihu.com/question/20669443|区间估计和假设检验有什么区别和联系？]]
+3. [[https://www.zhihu.com/question/26415058|如何用易懂的语言解释区间估计和假设检验的区别和联系？]]

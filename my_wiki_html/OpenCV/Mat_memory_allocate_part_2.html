@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mat_memory_allocate_part_2</title>
+    <link rel="Stylesheet" type="text/css" href="../assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/google-code-prettify/prettify.css" >
+    <!--<link rel="stylesheet" type="text/css" href="../assets/css/amazeui.min.css" > -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/autoc.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+<nav>
+    <a href="../index.html">Index</a>
+    <a href="https://github.com/antonaaa/">Github</a>
+    <a href="../about.html">About</a>
+    <a href="../sitemap.html">SiteMap</a>
+</nav>
+
+<div class="content">
+
+
+<p>
+本文将分析<code>Mat</code>类将如何根据类型参数来分配空间的
+</p>
+
+
+<div id="源码路径"><h2 id="源码路径">源码路径</h2></div>
+
+<p>
+<code>opencv-3.2.0/modules/core/include/opencv2/core/hal/interface.h</code>
+</p>
+<ul>
+<li>
+<code>CV_8U</code>、<code>CV_8S</code>、...<code>CV8UC1</code>、<code>CV8UC2</code>、..., line 64
+
+</ul>
+<p>
+<code>opencv-3.2.0/modules/core/include/opencv2/core/cvdef.h</code>
+</p>
+<ul>
+<li>
+<code>CV_ELEM_SIZE</code>, line 402
+
+<li>
+<code>CV_ELEM_SIZE1</code>, line 406
+
+</ul>
+
+<p>
+<code>opencv-3.2.0/modules/core/src/matrix.cpp</code>
+</p>
+<ul>
+<li>
+<code>setSize()</code>, line 278
+
+<li>
+<code>create()</code>, line 388
+
+</ul>
+
+
+<div id="分析"><h2 id="分析">分析</h2></div>
+<p>
+分析了<code>Mat</code>如何计算出矩阵要分配的空间， 这些空间是用来存储数据的， 至于那些多分配出来空间，已经在第一部分分析过了。
+</p>
+
+<div id="分析-Part1"><h3 id="Part1">Part1</h3></div>
+<p>
+	初始化<code>Mat</code>类时，至少需要维度和矩阵类型这两个参数， 而矩阵要分配的空间，也是由这两个参数决定的。
+</p>
+	
+<p>
+	矩阵的类型有以下这些， 其中的第一个数字决定了一个通道的字节数， 而第二个数字决定了通道数。
+</p>
+
+<p>
+	所以一个像素所占用的字节数是：每个通道所占用的字节数 * 通道数	
+</p>
+
+<pre cpp>
+#define CV_8UC1 CV_MAKETYPE(CV_8U,1)
+#define CV_8UC2 CV_MAKETYPE(CV_8U,2)
+#define CV_8UC3 CV_MAKETYPE(CV_8U,3)
+#define CV_8UC4 CV_MAKETYPE(CV_8U,4)
+#define CV_8UC(n) CV_MAKETYPE(CV_8U,(n))
+
+#define CV_8SC1 CV_MAKETYPE(CV_8S,1)
+#define CV_8SC2 CV_MAKETYPE(CV_8S,2)
+#define CV_8SC3 CV_MAKETYPE(CV_8S,3)
+#define CV_8SC4 CV_MAKETYPE(CV_8S,4)
+#define CV_8SC(n) CV_MAKETYPE(CV_8S,(n))
+
+#define CV_16UC1 CV_MAKETYPE(CV_16U,1)
+#define CV_16UC2 CV_MAKETYPE(CV_16U,2)
+#define CV_16UC3 CV_MAKETYPE(CV_16U,3)
+#define CV_16UC4 CV_MAKETYPE(CV_16U,4)
+#define CV_16UC(n) CV_MAKETYPE(CV_16U,(n))
+
+#define CV_16SC1 CV_MAKETYPE(CV_16S,1)
+#define CV_16SC2 CV_MAKETYPE(CV_16S,2)
+#define CV_16SC3 CV_MAKETYPE(CV_16S,3)
+#define CV_16SC4 CV_MAKETYPE(CV_16S,4)
+#define CV_16SC(n) CV_MAKETYPE(CV_16S,(n))
+
+#define CV_32SC1 CV_MAKETYPE(CV_32S,1)
+#define CV_32SC2 CV_MAKETYPE(CV_32S,2)
+#define CV_32SC3 CV_MAKETYPE(CV_32S,3)
+#define CV_32SC4 CV_MAKETYPE(CV_32S,4)
+#define CV_32SC(n) CV_MAKETYPE(CV_32S,(n))
+
+#define CV_32FC1 CV_MAKETYPE(CV_32F,1)
+#define CV_32FC2 CV_MAKETYPE(CV_32F,2)
+#define CV_32FC3 CV_MAKETYPE(CV_32F,3)
+#define CV_32FC4 CV_MAKETYPE(CV_32F,4)
+#define CV_32FC(n) CV_MAKETYPE(CV_32F,(n))
+
+#define CV_64FC1 CV_MAKETYPE(CV_64F,1)
+#define CV_64FC2 CV_MAKETYPE(CV_64F,2)
+#define CV_64FC3 CV_MAKETYPE(CV_64F,3)
+#define CV_64FC4 CV_MAKETYPE(CV_64F,4)
+#define CV_64FC(n) CV_MAKETYPE(CV_64F,(n))
+</pre>
+
+<div id="分析-Part 2"><h3 id="Part 2">Part 2</h3></div>
+<p>
+每个<code>Mat</code>类最终都会调用<code>create()</code>来分配空间， 在<code>create()</code>中又会调用<code>setSize()</code>，该函数对<code>size.p[]</code>, <code>step.p[]</code>, <code>rows</code>, <code>cols</code>等进行了赋值。
+最终所需的空间由 <code>sizes</code> 和 <code>_type</code>所决定
+</p>
+
+<pre cpp>
+void Mat::create(int d, const int* _sizes, int _type)
+{
+    int i;
+    CV_Assert(0 &lt;= d &amp;&amp; d &lt;= CV_MAX_DIM &amp;&amp; _sizes);
+    _type = CV_MAT_TYPE(_type);
+
+    if( data &amp;&amp; (d == dims || (d == 1 &amp;&amp; dims &lt;= 2)) &amp;&amp; _type == type() )
+    {
+        if( d == 2 &amp;&amp; rows == _sizes[0] &amp;&amp; cols == _sizes[1] )
+            return;
+        for( i = 0; i &lt; d; i++ )
+            if( size[i] != _sizes[i] )
+                break;
+        if( i == d &amp;&amp; (d &gt; 1 || size[1] == 1))
+            return;
+    }
+
+    int _sizes_backup[CV_MAX_DIM]; // #5991
+    if (_sizes == (this-&gt;size.p))
+    {
+        for(i = 0; i &lt; d; i++ )
+            _sizes_backup[i] = _sizes[i];
+        _sizes = _sizes_backup;
+    }
+
+    release();
+    if( d == 0 )
+        return;
+    flags = (_type &amp; CV_MAT_TYPE_MASK) | MAGIC_VAL;
+	//setSize函数将step，size，rows, cols赋值
+    setSize(*this, d, _sizes, 0, true);
+
+	//total()是总共要分配的字节数， 用维度和矩阵类型所决定
+    if( total() &gt; 0 )
+    {
+        MatAllocator *a = allocator, *a0 = getDefaultAllocator();
+#ifdef HAVE_TGPU
+        if( !a || a == tegra::getAllocator() )
+            a = tegra::getAllocator(d, _sizes, _type);
+#endif
+        if(!a)
+            a = a0;
+        try
+        {
+            u = a-&gt;allocate(dims, size, _type, 0, step.p, 0, USAGE_DEFAULT);
+            CV_Assert(u != 0);
+        }
+        catch(...)
+        {
+            if(a != a0)
+                u = a0-&gt;allocate(dims, size, _type, 0, step.p, 0, USAGE_DEFAULT);
+            CV_Assert(u != 0);
+        }
+        CV_Assert( step[dims-1] == (size_t)CV_ELEM_SIZE(flags) );
+    }
+
+    addref();
+    finalizeHdr(*this);
+}
+</pre>
+
+<pre cpp>
+static inline void setSize( Mat&amp; m, int _dims, const int* _sz,
+                            const size_t* _steps, bool autoSteps=false )
+{
+    CV_Assert( 0 &lt;= _dims &amp;&amp; _dims &lt;= CV_MAX_DIM );
+    if( m.dims != _dims )
+    {
+        if( m.step.p != m.step.buf )
+        {
+			//因为如果m.dims != _dims, 所以如果m.step.p != m.step.buf, 那么要先释放m.step.p的空间
+            fastFree(m.step.p);
+			//先默认Mat是二维的， 那么下面的操作是必备的
+            m.step.p = m.step.buf;
+            m.size.p = &amp;m.rows;
+        }
+		//如果Mat不是二维的， 那么分配空间
+        if( _dims &gt; 2 )
+        {
+            m.step.p = (size_t*)fastMalloc(_dims*sizeof(m.step.p[0]) + (_dims+1)*sizeof(m.size.p[0]));
+            m.size.p = (int*)(m.step.p + _dims) + 1;
+            m.size.p[-1] = _dims;
+            m.rows = m.cols = -1;
+        }
+    }
+
+    m.dims = _dims;
+    if( !_sz )
+        return;
+
+    size_t esz = CV_ELEM_SIZE(m.flags), esz1 = CV_ELEM_SIZE1(m.flags), total = esz;
+	//total = esz,   esz应该是一个像素的大小， 例如如果类型是CV_16SC3, 那么一个像素为2 * 3个字节， 那么esz = 6
+    for( int i = _dims-1; i &gt;= 0; i-- )
+    {
+        int s = _sz[i];
+        CV_Assert( s &gt;= 0 );
+        m.size.p[i] = s;
+
+        if( _steps )
+        {
+            if (_steps[i] % esz1 != 0)
+            {
+                CV_Error(Error::BadStep, "Step must be a multiple of esz1");
+            }
+
+            m.step.p[i] = i &lt; _dims-1 ? _steps[i] : esz;
+        }
+        else if( autoSteps )
+        {
+            m.step.p[i] = total;
+            int64 total1 = (int64)total*s;
+            if( (uint64)total1 != (size_t)total1 )
+                CV_Error( CV_StsOutOfRange, "The total matrix size does not fit to \"size_t\" type" );
+            total = (size_t)total1;
+        }
+    }
+
+    if( _dims == 1 )
+    {
+        m.dims = 2;
+        m.cols = 1;
+        m.step[1] = esz;
+    }
+}
+</pre>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+<footer>
+    声明，本文采用<a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a>授权。
+</footer>
+
+
+<style>
+.sdsm-menu li:hover {
+    color: #146;
+}
+
+.sdsm-menu li.active.first {
+    font-weight: bold;
+    color: #a19d38;
+}
+
+.sdsm-menu li.active {
+    color: #a19d38;
+}
+</style>
+
+    <script src="../assets/js/jquery-1.7.1.min.js"></script>
+    <script src="../assets/js/autoc.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()
+		new AutocJS({
+			article: '.content',
+			title: 'Tabel of Contents',
+			selector: 'h2, h3, h4, h5, h6'
+		});
+});
+
+
+
+    </script>
+    <script src="../assets/google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

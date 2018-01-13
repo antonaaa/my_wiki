@@ -128,7 +128,7 @@ mysql数据存储的地址: /usr/local/var/mysql
 * install opencv
 {{{
 //build without python2 support
-brew isntall mysql --without-python
+brew isntall opencv --without-python
 }}}
 == 图形界面软件 ==
 * QQ

@@ -1,0 +1,201 @@
+
+本文将分析`Mat`类将如何根据类型参数来分配空间的
+
+
+== 源码路径 ==
+
+`opencv-3.2.0/modules/core/include/opencv2/core/hal/interface.h`
+	* `CV_8U`、`CV_8S`、...`CV8UC1`、`CV8UC2`、..., line 64
+`opencv-3.2.0/modules/core/include/opencv2/core/cvdef.h`
+	* `CV_ELEM_SIZE`, line 402
+	* `CV_ELEM_SIZE1`, line 406
+
+`opencv-3.2.0/modules/core/src/matrix.cpp`
+	* `setSize()`, line 278
+	* `create()`, line 388
+
+
+== 分析 ==
+分析了`Mat`如何计算出矩阵要分配的空间， 这些空间是用来存储数据的， 至于那些多分配出来空间，已经在第一部分分析过了。
+
+=== Part1 ===
+	初始化`Mat`类时，至少需要维度和矩阵类型这两个参数， 而矩阵要分配的空间，也是由这两个参数决定的。
+	
+	矩阵的类型有以下这些， 其中的第一个数字决定了一个通道的字节数， 而第二个数字决定了通道数。
+
+	所以一个像素所占用的字节数是：每个通道所占用的字节数 * 通道数	
+
+{{{cpp	
+#define CV_8UC1 CV_MAKETYPE(CV_8U,1)
+#define CV_8UC2 CV_MAKETYPE(CV_8U,2)
+#define CV_8UC3 CV_MAKETYPE(CV_8U,3)
+#define CV_8UC4 CV_MAKETYPE(CV_8U,4)
+#define CV_8UC(n) CV_MAKETYPE(CV_8U,(n))
+
+#define CV_8SC1 CV_MAKETYPE(CV_8S,1)
+#define CV_8SC2 CV_MAKETYPE(CV_8S,2)
+#define CV_8SC3 CV_MAKETYPE(CV_8S,3)
+#define CV_8SC4 CV_MAKETYPE(CV_8S,4)
+#define CV_8SC(n) CV_MAKETYPE(CV_8S,(n))
+
+#define CV_16UC1 CV_MAKETYPE(CV_16U,1)
+#define CV_16UC2 CV_MAKETYPE(CV_16U,2)
+#define CV_16UC3 CV_MAKETYPE(CV_16U,3)
+#define CV_16UC4 CV_MAKETYPE(CV_16U,4)
+#define CV_16UC(n) CV_MAKETYPE(CV_16U,(n))
+
+#define CV_16SC1 CV_MAKETYPE(CV_16S,1)
+#define CV_16SC2 CV_MAKETYPE(CV_16S,2)
+#define CV_16SC3 CV_MAKETYPE(CV_16S,3)
+#define CV_16SC4 CV_MAKETYPE(CV_16S,4)
+#define CV_16SC(n) CV_MAKETYPE(CV_16S,(n))
+
+#define CV_32SC1 CV_MAKETYPE(CV_32S,1)
+#define CV_32SC2 CV_MAKETYPE(CV_32S,2)
+#define CV_32SC3 CV_MAKETYPE(CV_32S,3)
+#define CV_32SC4 CV_MAKETYPE(CV_32S,4)
+#define CV_32SC(n) CV_MAKETYPE(CV_32S,(n))
+
+#define CV_32FC1 CV_MAKETYPE(CV_32F,1)
+#define CV_32FC2 CV_MAKETYPE(CV_32F,2)
+#define CV_32FC3 CV_MAKETYPE(CV_32F,3)
+#define CV_32FC4 CV_MAKETYPE(CV_32F,4)
+#define CV_32FC(n) CV_MAKETYPE(CV_32F,(n))
+
+#define CV_64FC1 CV_MAKETYPE(CV_64F,1)
+#define CV_64FC2 CV_MAKETYPE(CV_64F,2)
+#define CV_64FC3 CV_MAKETYPE(CV_64F,3)
+#define CV_64FC4 CV_MAKETYPE(CV_64F,4)
+#define CV_64FC(n) CV_MAKETYPE(CV_64F,(n))
+}}}
+
+=== Part 2 ===
+每个`Mat`类最终都会调用`create()`来分配空间， 在`create()`中又会调用`setSize()`，该函数对`size.p[]`, `step.p[]`, `rows`, `cols`等进行了赋值。
+最终所需的空间由 `sizes` 和 `_type`所决定
+
+{{{cpp
+void Mat::create(int d, const int* _sizes, int _type)
+{
+    int i;
+    CV_Assert(0 <= d && d <= CV_MAX_DIM && _sizes);
+    _type = CV_MAT_TYPE(_type);
+
+    if( data && (d == dims || (d == 1 && dims <= 2)) && _type == type() )
+    {
+        if( d == 2 && rows == _sizes[0] && cols == _sizes[1] )
+            return;
+        for( i = 0; i < d; i++ )
+            if( size[i] != _sizes[i] )
+                break;
+        if( i == d && (d > 1 || size[1] == 1))
+            return;
+    }
+
+    int _sizes_backup[CV_MAX_DIM]; // #5991
+    if (_sizes == (this->size.p))
+    {
+        for(i = 0; i < d; i++ )
+            _sizes_backup[i] = _sizes[i];
+        _sizes = _sizes_backup;
+    }
+
+    release();
+    if( d == 0 )
+        return;
+    flags = (_type & CV_MAT_TYPE_MASK) | MAGIC_VAL;
+	//setSize函数将step，size，rows, cols赋值
+    setSize(*this, d, _sizes, 0, true);
+
+	//total()是总共要分配的字节数， 用维度和矩阵类型所决定
+    if( total() > 0 )
+    {
+        MatAllocator *a = allocator, *a0 = getDefaultAllocator();
+#ifdef HAVE_TGPU
+        if( !a || a == tegra::getAllocator() )
+            a = tegra::getAllocator(d, _sizes, _type);
+#endif
+        if(!a)
+            a = a0;
+        try
+        {
+            u = a->allocate(dims, size, _type, 0, step.p, 0, USAGE_DEFAULT);
+            CV_Assert(u != 0);
+        }
+        catch(...)
+        {
+            if(a != a0)
+                u = a0->allocate(dims, size, _type, 0, step.p, 0, USAGE_DEFAULT);
+            CV_Assert(u != 0);
+        }
+        CV_Assert( step[dims-1] == (size_t)CV_ELEM_SIZE(flags) );
+    }
+
+    addref();
+    finalizeHdr(*this);
+}
+}}}
+
+{{{cpp
+static inline void setSize( Mat& m, int _dims, const int* _sz,
+                            const size_t* _steps, bool autoSteps=false )
+{
+    CV_Assert( 0 <= _dims && _dims <= CV_MAX_DIM );
+    if( m.dims != _dims )
+    {
+        if( m.step.p != m.step.buf )
+        {
+			//因为如果m.dims != _dims, 所以如果m.step.p != m.step.buf, 那么要先释放m.step.p的空间
+            fastFree(m.step.p);
+			//先默认Mat是二维的， 那么下面的操作是必备的
+            m.step.p = m.step.buf;
+            m.size.p = &m.rows;
+        }
+		//如果Mat不是二维的， 那么分配空间
+        if( _dims > 2 )
+        {
+            m.step.p = (size_t*)fastMalloc(_dims*sizeof(m.step.p[0]) + (_dims+1)*sizeof(m.size.p[0]));
+            m.size.p = (int*)(m.step.p + _dims) + 1;
+            m.size.p[-1] = _dims;
+            m.rows = m.cols = -1;
+        }
+    }
+
+    m.dims = _dims;
+    if( !_sz )
+        return;
+
+    size_t esz = CV_ELEM_SIZE(m.flags), esz1 = CV_ELEM_SIZE1(m.flags), total = esz;
+	//total = esz,   esz应该是一个像素的大小， 例如如果类型是CV_16SC3, 那么一个像素为2 * 3个字节， 那么esz = 6
+    for( int i = _dims-1; i >= 0; i-- )
+    {
+        int s = _sz[i];
+        CV_Assert( s >= 0 );
+        m.size.p[i] = s;
+
+        if( _steps )
+        {
+            if (_steps[i] % esz1 != 0)
+            {
+                CV_Error(Error::BadStep, "Step must be a multiple of esz1");
+            }
+
+            m.step.p[i] = i < _dims-1 ? _steps[i] : esz;
+        }
+        else if( autoSteps )
+        {
+            m.step.p[i] = total;
+            int64 total1 = (int64)total*s;
+            if( (uint64)total1 != (size_t)total1 )
+                CV_Error( CV_StsOutOfRange, "The total matrix size does not fit to \"size_t\" type" );
+            total = (size_t)total1;
+        }
+    }
+
+    if( _dims == 1 )
+    {
+        m.dims = 2;
+        m.cols = 1;
+        m.step[1] = esz;
+    }
+}
+}}}

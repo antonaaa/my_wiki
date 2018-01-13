@@ -1,0 +1,126 @@
+%title Mat内存分配1
+
+= Mat内存分配1 =
+== 源码路径 ==
+
+`opencv-3.2.0/modules/core/include/opencv2/core/private.hpp`
+	* `#define  CV_MALLOC_ALIGN    16`, line 143
+
+`opencv-3.2.0/modules/core/include/opencv2/core/utility.hpp`
+	* `alignPtr()`, line 424
+	* `alignSize()`, line 436
+
+`opencv-3.2.0/modules/core/src/alloc.cpp`
+	* `fastMalloc()`, line 64
+	* `fastFree()`, line 72
+
+`opencv-3.2.0/modules/core/src/matrix.cpp`
+	* `StdMatAllocator::allocate()`, line 174
+
+`opencv-3.2.0/modules/core/src/matrix.cpp`
+	* `create()`, line 384
+
+== 分析 ==
+=== Part1 ===
+{{{cpp
+/** @brief Aligns a pointer to the specified number of bytes.
+The function returns the aligned pointer of the same type as the input pointer:
+@param ptr Aligned pointer.
+@param n Alignment size that must be a power of two.
+ */
+template<typename _Tp> static inline _Tp* alignPtr(_Tp* ptr, int n=(int)sizeof(_Tp))
+{
+    return (_Tp*)(((size_t)ptr + n-1) & -n);
+}
+}}}
+
+{{{cpp
+/** @brief Aligns a buffer size to the specified number of bytes.
+The function returns the minimum number that is greater or equal to sz and is divisible by n :
+@param sz Buffer size to align.
+@param n Alignment size that must be a power of two.
+ */
+static inline size_t alignSize(size_t sz, int n)
+{
+    CV_DbgAssert((n & (n - 1)) == 0); // n is a power of 2
+    return (sz + n-1) & -n;
+}
+}}}
+* `alignSize()`
+该函数的作用是得到一个最小的大于sz的，且能够整除n的数。用数学表达式表达出来就是(sz + n - 1) / n * n。
+
+这里使用位运算来实现，显然是为了更快一些。由于n是2的次幂，例如如果n是`0000 1000`，那么-n就是`1111 1000`，也就是说-n的作用是把1左边的0都变成1。
+
+n-1的二进制表示是`0000 0111` 所以sz+n-1之后，要么不产生进位，那么说明sz刚好是n的倍数；要么产生进位，那么与n进行`&`操作之后，把最右边的3位全变成0，也就变成了n的倍数。
+
+
+* `alignPtr()`
+	原理同alignSize，alignPtr返回一个内存地址，该函数>=ptr的一个地址，且该地址能被n整除。
+
+在opencv3.2的源码中
+`#define CV_MALLOC_ALIGN 16`
+
+`n = CV_MALLOC_ALIGN`
+
+=== Part2 ===
+{{{cpp
+void* fastMalloc( size_t size )
+{
+    uchar* udata = (uchar*)malloc(size + sizeof(void*) + CV_MALLOC_ALIGN);
+    if(!udata)
+        return OutOfMemoryError(size);
+    uchar** adata = alignPtr((uchar**)udata + 1, CV_MALLOC_ALIGN);
+    adata[-1] = udata;
+    return adata;
+}
+}}}
+
+一共分配了`size + sizeof(void*) + CV_MALLOC_ALIGN`个字节的空间，其中`size`个字节是矩阵`Mat`所要求的大小。其余多出来的字节是用来维护其它东西的，下面会介绍。
+
+`(uchar**)udata + 1` 等价于`udata + sizeof(uchar*)`，就是将指针向后移动了一个指针长度的字节，这部分空间由多分配的`sizeof(void*)`补足。
+
+`uchar** adata = alignPtr((uchar**))udata + 1, CV_MALLOC_ALIGN)`，就是将指针首地址对齐到CV_MALLOC_ALIGN的倍数，这部分空间用多分配的`CV_MALLOC_ALIGN`个字节的空间补足（由于CV_MALLOC_ALIGN == 16, 所以下面用16代替), 由于指针的首地址必须是16的倍数，所以必须往后偏移，但是偏移的字节数肯定是[1,15]个字节之间，所以浪费的空间不超过16。
+
+`adata[-1] = udata`，这个正确性由多分配的`sizeof(void*)`个字节来保证，这部分空间用来存储malloc返回的内存首地址，以便在`fastFree`中可以正确释放。
+
+{{{cpp
+void fastFree(void* ptr)
+{
+    if(ptr)
+    {
+        uchar* udata = ((uchar**)ptr)[-1];
+        CV_DbgAssert(udata < (uchar*)ptr &&
+               ((uchar*)ptr - udata) <= (ptrdiff_t)(sizeof(void*)+CV_MALLOC_ALIGN));
+        free(udata);
+    }
+}
+}}}
+
+指针`ptr`就是上述`fastMalloc()`中对齐之后的指针，`uchar* udata = ptr[-1]`即指向了`malloc()`返回的内存首地址
+
+`ptr - udata` 肯定不超过多分配的内存`sizeof(void*) + CV_MALLOC_ALIGN`
+
+=== Part3 ===
+`Mat`类中定义了几个分配器，自定义的分配器`MatAllocator* allocator`是由`Mat`的构造函数传入，所以应该是用户自己实现，如果没有的话，一般是使用`StdMatAllocator`来分配内存，在`StdMatAllocator::allocator()`中会调用`fastMalloc()`来分配内存。
+{{{cpp
+    //! custom allocator
+    MatAllocator* allocator;
+    UMatUsageFlags usageFlags; // usage flags for allocator
+    //! and the standard allocator
+    static MatAllocator* getStdAllocator();
+}}}
+
+
+=== Part4 ===
+
+`opencv-3.2.0/modules/core/src/matrix.cpp`
+	* `create()`, line 384
+
+只有这个`create()`函数是真正给`Mat`类分配内存的，其它的`create()`最终都是调用这个`create()`。
+
+
+所以流程是这样的
+`Mat构造器` -> `create()` -> `StdMatAllocator::allocator()` -> `fastMalloc()` -> `alignPtr()`
+
+* [[http://blog.csdn.net/lming_08/article/details/26821963?utm_source=tuicool&utm_medium=referral|OpenCV源码之内存分配-指针对齐]]
+* [[http://www.cnblogs.com/summerRQ/articles/2408767.html|opencv中的安全指针和指针对齐]]

@@ -3,6 +3,7 @@
 
 == Mathematics == 
 * [[Mathematics/Caculus|Caculus]]
+* [[Mathematics/Statistics|Statistics]]
 * [[Mathematics/Linear_Algebra/index|Linear Algebra]]
 * [[Mathematics/Optimization/index|Optimization]]
 * [[http://www.matongxue.com/madocs/8.html#/madoc|如何通俗地解释欧拉公式（e^θi=cosθ + isinθ)]]
@@ -29,9 +30,4 @@
 == Others ==
 * [[Others/reinstall_the_system|Reinstall The System]]
 * [[Others/what_vimwiki_can_do|What Vimwiki Can Do]]
-
-== The Fucking English ==
-* [[English/index|文法俱乐部阅读笔记]]
-
-
 

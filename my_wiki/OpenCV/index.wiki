@@ -1,4 +1,12 @@
 = OpenCV =
 
+* [[http://blog.csdn.net/computerme/article/details/53433315||编译安装步骤]]
 * [[The_source_of_class_Mat|Mat类详解]]
 * [[Pointer_alignment_in_OpenCV|OpenCV中的指针对齐]]
+
+
+
+= 源码阅读 =
+
+* [[Mat_memory_allocate_part_1|Mat内存分配1]]
+* [[Mat_memory_allocate_part_2|Mat内存分配2]]
