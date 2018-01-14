@@ -1,0 +1,51 @@
+%title convertTo函数
+
+== 函数 ==
+{{{cpp
+void Mat::convertTo( OutputArray m, int rtype, double scale=1, double shift=0 ) const;  
+}}}
+
+* `m` -- 目标矩阵，如果m在运算前没有合适的尺寸或者类型， 那么将会被重新分配
+* `rtype` -- 目标矩阵的类型。 因为目标矩阵的通道数和源矩阵一样，所以`rtype`也可以看做是目标矩阵的位深度，也即可以传入`CV_8U`、`CV_32F`等这样的参数。 如果`rtype`为负值，那么目标矩阵将和源矩阵使用同样的类型。
+* `scale` -- 尺度变换因子（可选）。`dst(y,x) = src(y,x) * scale + shift`。
+* `shift` -- 附加到尺度变换后的值上的偏移量。
+
+== 使用 ==
+
+=== CV_8U 转 CV_32F ===
+如果要将`CV_8U`类型的图像转为`CV_32F`那么可直接用`src.convertTo(dst, CV_32F)`进行转换。
+
+但是这样转换有一个问题，那就是`imshow`显示图像时会不正确， 这是因为灰度或者RGB图像的颜色分量都在0~255之间。`CV_8U`的取值范围正好，因此直接`imshow`就可以显示图像了。而`CV_32F`的取值范围远远不止0~255。这是就需要`scale`这个参数发挥作用了。
+
+`float`类型`Mat`在存数据时，要归一化，即图像的数据要归一化到0~1之间。也即这是`float`类型图片的灰度空间。若`float`数据小于0，则会显示为黑色；若`float`数据大于`1`，则会显示为白色。
+
+所以`CV_8U`类型的图像转为`CV_32F`时要用`src.convertTo(dst, CV_32F, 1.0/255.0)`进行转换。
+
+
+=== CV_8U 转 CV_8S === 
+`CV_8S`的灰度空间是-128~127， 正好是255个灰度值， 所以如果要想`CV_8U`转为`CV_8S`的话，可以这么做, `src.convertTo(dst, CV_8S, 1, -128)`。
+
+=== CV_8U 转 CV_16U ===
+`CV_16U`的灰度空间是0~65535，`src.convertTo(dst, CV_16U, 1, 257)`。因为65535 / 255 = 257
+
+=== CV_8U 转 CV_16S ===
+`CV_16S`的灰度空间是-32768~32767，所以可以这么做，`src.convertTo(dst, CV_16S, 257, -32768)`。
+
+=== CV_8U 转 CV_32S ===
+`CV_32S`的灰度空间是2147483648~2147483647， 不知道为什么，不能用上面所说的方法进行转换
+
+
+
+
+同理，大的类型往下的类型进行转换， 那么就是上面过程的逆过程。
+
+
+
+==== 参数 ====
+
+1. [[http://blog.csdn.net/zhubaohua_bupt/article/details/51828763|opencv Mat 显示不同数据类型图像]]
+2. [[http://blog.csdn.net/zhangsmile123456/article/details/47313751|OpenCV不同图像深度类型的理解]]
+
+
+
+
